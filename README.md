@@ -23,7 +23,7 @@ The complete processor would ideally support:
 |On board Communication|AXI4 memory-mapped and AXI4-Stream|
 |Special Feature| Custom Accelerator and DSP instruction extension |
 
-Core Pipeline:
+## Core Pipeline
 ```mermaid
 flowchart LR
     IF["Instruction Fetch"] --> ID["Instruction Decode"]
