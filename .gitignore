@@ -1,0 +1,15 @@
+# Generated Vivado project
+/build/
+
+# Vivado temporary files
+.Xil/
+*.jou
+*.log
+*.str
+
+# Simulation output
+*.wdb
+*.vcd
+
+# Editor files
+.vscode/
