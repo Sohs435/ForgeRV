@@ -74,7 +74,7 @@ flowchart TD
 ```
 ### Special Feature: XForge
 
-Custom extension can be called XForge given RISC-V uses X for non-standard extensions. 
+ForgeRV will execute independently inside the programmable logic. Custom extension can be called XForge given RISC-V uses X for non-standard extensions. 
 
 Potential operations:
 ```text 
@@ -90,4 +90,21 @@ satadd      x5, x6, x7    # Saturating addition
 dot8        x5, x6, x7    # Four 8-bit multiply-accumulates
 ```
 
+### Memory Architecture
 
+The processor should not directly contain AXI logic. The processor should just get
+simple instruction and datas iterfaces. 
+
+```text
+CPU instruction interface -> BRAM/AXI adapter
+CPU data interface -> BRAM/Peripherials/AXI adapter
+```
+
+FPGA Config:
+```text
+XForge -> BRAM/TCM -> AXI bridge -> UART/Timer -> Accelerator interface
+```
+
+## Ver1 Target
+
+A non-pipelined RV32I processor that executes programs from simulated memory and passes directed tests for every implemented instruction.
