@@ -64,7 +64,7 @@ Writeback:
 
 ```mermaid
 flowchart TD
-    PS["ARM and Python"] --> AXI["AXI Interconnect"]
+    PS["Control Software on ARM cortex A9"] --> AXI["AXI Interconnect"]
     AXI --> SOC["ForgeRV SoC"]
     SOC --> CORE["RV32 Core"]
     SOC --> MEM["BRAM and TCM"]
