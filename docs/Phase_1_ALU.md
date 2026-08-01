@@ -537,7 +537,7 @@ All 16 rv32_alu tests passed.
 
 ## Waveform Verification
 
-![Vivado waveform showing all RV32 ALU tests passing](images/rv32_alu_waveform.png)
+![Vivado waveform showing all RV32 ALU tests passing](Images/rv32_alu_waveform.png)
 
 The waveform displays the following signals:
 
