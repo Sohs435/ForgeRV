@@ -32,6 +32,37 @@ flowchart LR
     MEM --> WB["Writeback"]
 ```
 
+Instruction Fetch: 
+ - Holds program counter
+ - Requests instruction/s from memory
+ - Calculates next sequential address
+ - Redirects execution after jums, branches and exceptions
+
+Instruction Decode: 
+ - Decodes opcode and function fields
+ - Reads register file
+ - Generates immediate values
+ - produces control signals for later stages 
+ - Detects some pipeline dependencies
+
+Execute:
+ - Runs ALU
+ - Compares branch operands and calculates branch targets
+ - Calculates store/load addresses
+ - Runs multiply/divide instructions
+
+Memory:
+ - Performs loads and stores
+ - Handles byte enables and alignment of data
+ - Communicates with memory and peripherals
+
+Writeback:
+ - Writes result into one of 32 registers
+ - Selects between ALU, memory, multiplication, etc. 
+ - Never writes to x0, which is always 0 
+
+
+
 
 
 
