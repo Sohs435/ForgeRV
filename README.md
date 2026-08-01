@@ -72,8 +72,22 @@ flowchart TD
     CORE --> XFORGE["Accelerator Interface"]
     XFORGE --> ACCEL["FPGA Accelerators"]
 ```
+### Special Feature: XForge
 
+Custom extension can be called XForge given RISC-V uses X for non-standard extensions. 
 
+Potential operations:
+```text 
+xfg.write    x5, x6       # Write accelerator register
+xfg.launch   x7           # Start an accelerator operation
+xfg.status   x8           # Read accelerator state
+xfg.result   x9           # Retrieve a result
+xfg.wait                  # Sleep until the accelerator completes
 
+mac         x5, x6, x7    # Multiply and accumulate
+padd16      x5, x6, x7    # Two parallel 16-bit additions
+satadd      x5, x6, x7    # Saturating addition
+dot8        x5, x6, x7    # Four 8-bit multiply-accumulates
+```
 
 
