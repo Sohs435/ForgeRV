@@ -105,6 +105,6 @@ FPGA Config:
 XForge -> BRAM/TCM -> AXI bridge -> UART/Timer -> Accelerator interface
 ```
 
-## Ver1 Target
+## Initial Target
 
 A non-pipelined RV32I processor that executes programs from simulated memory and passes directed tests for every implemented instruction.
