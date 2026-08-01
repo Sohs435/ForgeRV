@@ -7,6 +7,7 @@ The final architecture and specialized use case are currently being defined.
 ForgeRV will be a custom 32-bit RISC-V processor and small SoC implemented from scratch
 on the PYNQ-Z2 development board in Verilog, SystemVerilog, Python and C. 
 
+The complete processor would ideally support:
 |Area|Planned Feature|
 |---|---|
 |ISA| RV32IMC|
@@ -21,6 +22,16 @@ on the PYNQ-Z2 development board in Verilog, SystemVerilog, Python and C.
 |Debugging| Halt, step, register inspection and performance counters|
 |On board Communication|AXI4 memory-mapped and AXI4-Stream|
 |Special Feature| Custom Accelerator and DSP instruction extension |
+
+Core Pipeline:
+```mermaid
+flowchart LR
+    IF["Instruction Fetch"] --> ID["Instruction Decode"]
+    ID --> EX["Execute"]
+    EX --> MEM["Memory"]
+    MEM --> WB["Writeback"]
+```
+
 
 
 
