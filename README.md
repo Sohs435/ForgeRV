@@ -14,5 +14,15 @@ on the PYNQ-Z2 development board in Verilog, SystemVerilog, Python and C.
 |Memory| BRAM/TCM initially, caches later on |
 |Arithmetic| Harware Multiplication and Division |
 |System| CSRs, exceptions and interrupts | 
+|Control Flow| Branch Prediction and return-address stack | 
+|Hazards| Forwarding, stalls abd pipeline flushing |
+|System| CSRs, exceptions, timer and external interrupts |
+|Protection| Physical Memory Protection |
+|Debugging| Halt, step, register inspection and performance counters|
+|On board Communication|AXI4 memory-mapped and AXI4-Stream|
+|Special Feature| Custom Accelerator and DSP instruction extension |
+
+
+
 
 
