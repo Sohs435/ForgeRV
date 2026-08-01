@@ -60,8 +60,18 @@ Writeback:
  - Selects between ALU, memory, multiplication, etc. 
  - Never writes to x0, which is always 0 
 
+## System Level Architecture 
 
-
+```mermaid
+flowchart TD
+    PS["ARM and Python"] --> AXI["AXI Interconnect"]
+    AXI --> SOC["ForgeRV SoC"]
+    SOC --> CORE["RV32 Core"]
+    SOC --> MEM["BRAM and TCM"]
+    SOC --> PERIPH["UART, Timer and GPIO"]
+    CORE --> XFORGE["Accelerator Interface"]
+    XFORGE --> ACCEL["FPGA Accelerators"]
+```
 
 
 
