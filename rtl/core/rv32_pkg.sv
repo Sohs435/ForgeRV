@@ -14,4 +14,13 @@ package rv32_pkg;
         ALU_COPY_B = 4'd10
     } alu_op_t;
 
+    typedef enum logic [2:0] {
+        IMM_NONE = 3'd0,
+        IMM_I    = 3'd1,
+        IMM_S    = 3'd2,
+        IMM_B    = 3'd3,
+        IMM_U    = 3'd4,
+        IMM_J    = 3'd5
+    } imm_type_t;
+    
 endpackage
