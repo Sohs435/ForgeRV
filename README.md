@@ -31,7 +31,6 @@ flowchart LR
     EX --> MEM["Memory"]
     MEM --> WB["Writeback"]
 ```
-
 Instruction Fetch: 
  - Holds program counter
  - Requests instruction/s from memory
