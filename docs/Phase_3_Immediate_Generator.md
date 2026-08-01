@@ -1,4 +1,4 @@
-#Phase 3.1 — RV32 Immediate Generator
+# Phase 3.1 — RV32 Immediate Generator
 
 ## Objective
 
