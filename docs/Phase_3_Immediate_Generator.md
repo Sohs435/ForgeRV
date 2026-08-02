@@ -1,4 +1,4 @@
-Fim# Phase 3.1 — RV32 Immediate Generator
+# Phase 3.1 — RV32 Immediate Generator
 
 ## Objective
 
@@ -43,9 +43,9 @@ typedef enum logic [2:0] {
 } imm_type_t;
 ```
 
-## RTL implementation
+## Original RTL implementation
 
-File: `rtl/core/rv32_imm_gen.sv`
+The first implementation constructs a complete 32-bit result for every immediate format and then selects one result with a `case` statement. It is compact, readable, and useful as a reference model.
 
 ```systemverilog
 module rv32_imm_gen (
@@ -70,6 +70,119 @@ module rv32_imm_gen (
 
 endmodule
 ```
+
+Conceptually, before synthesis optimization, this can be viewed as five 32-bit immediate candidates feeding a 5-to-1, 32-bit multiplexer.
+
+## Optimized bit-multiplexer implementation
+
+File: `rtl/core/rv32_imm_gen.sv`
+
+The settled implementation builds the selection logic around the shared bit positions deliberately chosen by the RISC-V instruction encoding. Instead of constructing five complete candidates, it selects only the instruction source needed by each output-bit group.
+
+```systemverilog
+module rv32_imm_gen (
+    input logic [31:0] instruction,
+    input rv32_pkg::imm_type_t immediate_type,
+    output logic [31:0] immediate
+);
+
+    import rv32_pkg::*;
+
+    always_comb begin
+        immediate = 32'b0;
+
+        if (immediate_type != IMM_NONE) begin
+            immediate[31] = instruction[31];
+            
+            if (immediate_type == IMM_U) immediate[30:20] = instruction[30:20];
+            else immediate[30:20] = {11{instruction[31]}};
+            
+            if (immediate_type == IMM_U || immediate_type == IMM_J) immediate[19:12] = instruction[19:12];
+            else immediate[19:12] = {8{instruction[31]}};
+            
+            case (immediate_type)
+                IMM_B: immediate[11] = instruction[7];
+                IMM_J: immediate[11] = instruction[20];
+                IMM_U: immediate[11] = 1'b0;
+                default: immediate[11] = instruction[31];
+            endcase
+
+            if (immediate_type == IMM_U) immediate[10:5] = 6'b0;
+            else immediate[10:5] = instruction[30:25];
+
+            case (immediate_type)
+                IMM_I: immediate[4:1] = instruction[24:21];
+                IMM_J: immediate[4:1] = instruction[24:21];
+                IMM_S: immediate[4:1] = instruction[11:8];
+                IMM_B: immediate[4:1] = instruction[11:8];
+                default: immediate[4:1] = 4'b0;
+            endcase
+
+            case (immediate_type)
+                IMM_I: immediate[0] = instruction[20];
+                IMM_S: immediate[0] = instruction[7];
+                default: immediate[0] = 1'b0;
+            endcase
+        end
+    end
+
+endmodule
+```
+
+The initial `immediate = 32'b0` assignment handles `IMM_NONE` and prevents latch inference. Every supported immediate type then overwrites only the bit groups that it requires.
+
+## Approximate multiplexer-area comparison
+
+This comparison uses **one-bit 2-to-1 multiplexer equivalents** as a technology-independent estimate. It is not a Vivado LUT-utilization result.
+
+### Original unsimplified structure
+
+A 5-to-1 multiplexer requires approximately four 2-to-1 multiplexers for each output bit:
+
+```text
+32 output bits × (5 - 1) muxes per bit = 128 one-bit mux equivalents
+```
+
+If `IMM_NONE` is counted as a sixth zero-valued input, the estimate becomes:
+
+```text
+32 output bits × (6 - 1) muxes per bit = 160 one-bit mux equivalents
+```
+
+### Optimized structure
+
+Ignoring `IMM_NONE` temporarily, the explicit selection network is approximately:
+
+| Output bits | Width | Possible data sources | Approximate 2-to-1 mux equivalents |
+| --- | ---: | --- | ---: |
+| `immediate[31]` | 1 | Always `instruction[31]` | 0 |
+| `immediate[30:20]` | 11 | Matching U-type bits or the sign bit | 11 |
+| `immediate[19:12]` | 8 | Matching U/J bits or the sign bit | 8 |
+| `immediate[11]` | 1 | `instruction[31]`, `instruction[7]`, `instruction[20]`, or zero | 3 |
+| `immediate[10:5]` | 6 | `instruction[30:25]` or zero | 6 |
+| `immediate[4:1]` | 4 | `instruction[24:21]`, `instruction[11:8]`, or zero | 8 |
+| `immediate[0]` | 1 | `instruction[20]`, `instruction[7]`, or zero | 2 |
+| **Total** | **32** | | **38** |
+
+The estimated reduction relative to an unsimplified 5-to-1, 32-bit mux is therefore:
+
+```text
+Saved mux equivalents = 128 - 38 = 90
+Approximate reduction = 90 / 128 × 100 = 70.3%
+```
+
+The `IMM_NONE` check can be viewed as an additional output-zero enable. If this is pessimistically counted as one extra mux for every output bit, the comparison becomes:
+
+```text
+Original including zero input = 160 mux equivalents
+Optimized including output-zero enable = 38 + 32 = 70 mux equivalents
+Saved mux equivalents = 160 - 70 = 90
+Approximate reduction = 90 / 160 × 100 = 56.3%
+```
+
+Therefore, the source-level architecture reduces the estimated generic mux network by approximately **56% to 70%**, depending on how the `IMM_NONE` zero selection is counted.
+
+This does not guarantee a 56% to 70% reduction in FPGA LUT usage. Vivado can recognize the shared instruction bits and constants in the original `case` implementation and may optimize it into logic very similar to the explicit version. The physical saving must be measured by synthesizing both versions with the same device, constraints, and top-level design, then comparing LUT count and timing in the utilization reports.
 
 ## How each immediate format works
 
