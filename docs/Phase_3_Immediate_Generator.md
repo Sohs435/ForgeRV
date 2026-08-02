@@ -407,3 +407,391 @@ The immediate-generator portion of Phase 3 is complete. The next module is the *
 
 - [RISC-V Unprivileged ISA Specification — RV32I Base Integer Instruction Set](https://docs.riscv.org/reference/isa/v20260120/unpriv/rv32.html)
 - [RISC-V: Immediate Encoding Variants](https://stackoverflow.com/questions/39427092/risc-v-immediate-encoding-variants)
+
+## Phase 3.2 — Instruction Decoder and Decode Stage
+
+The second part of Phase 3 implements the instruction decoder and connects it to the immediate generator. Together, these modules convert a raw 32-bit instruction into the register addresses, immediate value, ALU controls, memory controls, branch controls, jump controls, writeback controls, and illegal-instruction status required by the later CPU datapath.
+
+The decoder and decode stage are entirely combinational. Neither module requires a clock or reset.
+
+## Decoder objective
+
+The decoder examines three main instruction fields:
+
+```systemverilog
+assign opcode = instruction[6:0];
+assign funct3 = instruction[14:12];
+assign funct7 = instruction[31:25];
+```
+
+The opcode identifies the major instruction group. `funct3` and `funct7` then identify the exact instruction within that group.
+
+For example, `ADD` and `SUB` share the same opcode and `funct3` value. They are distinguished by `funct7`:
+
+```text
+opcode = 0110011
+funct3 = 000
+funct7 = 0000000 -> ADD
+funct7 = 0100000 -> SUB
+```
+
+## RV32I opcode groups
+
+| Opcode constant | Binary opcode | Format | Instructions |
+| --- | --- | --- | --- |
+| `OPCODE_LUI` | `0110111` | U | `LUI` |
+| `OPCODE_AUIPC` | `0010111` | U | `AUIPC` |
+| `OPCODE_JAL` | `1101111` | J | `JAL` |
+| `OPCODE_JALR` | `1100111` | I | `JALR` |
+| `OPCODE_BRANCH` | `1100011` | B | `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU` |
+| `OPCODE_LOAD` | `0000011` | I | `LB`, `LH`, `LW`, `LBU`, `LHU` |
+| `OPCODE_STORE` | `0100011` | S | `SB`, `SH`, `SW` |
+| `OPCODE_OP_IMM` | `0010011` | I | Immediate ALU operations |
+| `OPCODE_OP` | `0110011` | R | Register-register ALU operations |
+| `OPCODE_MISC_MEM` | `0001111` | I | `FENCE` |
+| `OPCODE_SYSTEM` | `1110011` | I | `ECALL`, `EBREAK` |
+
+## Package additions
+
+The following definitions were added to `rv32_pkg.sv` to provide readable opcode and control names:
+
+```systemverilog
+    localparam logic [6:0] OPCODE_LUI = 7'b0110111;
+    localparam logic [6:0] OPCODE_AUIPC = 7'b0010111;
+    localparam logic [6:0] OPCODE_JAL = 7'b1101111;
+    localparam logic [6:0] OPCODE_JALR = 7'b1100111;
+    localparam logic [6:0] OPCODE_BRANCH = 7'b1100011;
+    localparam logic [6:0] OPCODE_LOAD = 7'b0000011;
+    localparam logic [6:0] OPCODE_STORE = 7'b0100011;
+    localparam logic [6:0] OPCODE_OP_IMM = 7'b0010011;
+    localparam logic [6:0] OPCODE_OP = 7'b0110011;
+    localparam logic [6:0] OPCODE_MISC_MEM = 7'b0001111;
+    localparam logic [6:0] OPCODE_SYSTEM = 7'b1110011;
+
+    localparam logic [6:0] FUNCT7_NORMAL = 7'b0000000;
+    localparam logic [6:0] FUNCT7_SUB_SRA = 7'b0100000;
+
+    typedef enum logic [1:0] {
+        ALU_A_RS1 = 2'd0,
+        ALU_A_PC = 2'd1,
+        ALU_A_ZERO = 2'd2
+    } alu_a_sel_t;
+
+    typedef enum logic {
+        ALU_B_RS2 = 1'b0,
+        ALU_B_IMMEDIATE = 1'b1
+    } alu_b_sel_t;
+
+    typedef enum logic [1:0] {
+        WB_NONE = 2'd0,
+        WB_ALU = 2'd1,
+        WB_MEMORY = 2'd2,
+        WB_PC_PLUS_4 = 2'd3
+    } writeback_sel_t;
+
+    typedef enum logic [2:0] {
+        BRANCH_NONE = 3'd0,
+        BRANCH_EQ = 3'd1,
+        BRANCH_NE = 3'd2,
+        BRANCH_LT = 3'd3,
+        BRANCH_GE = 3'd4,
+        BRANCH_LTU = 3'd5,
+        BRANCH_GEU = 3'd6
+    } branch_op_t;
+
+    typedef enum logic [1:0] {
+        JUMP_NONE = 2'd0,
+        JUMP_JAL = 2'd1,
+        JUMP_JALR = 2'd2
+    } jump_op_t;
+
+    typedef enum logic [1:0] {
+        MEMORY_NONE = 2'd0,
+        MEMORY_BYTE = 2'd1,
+        MEMORY_HALF = 2'd2,
+        MEMORY_WORD = 2'd3
+    } memory_size_t;
+
+    typedef enum logic [1:0] {
+        SPECIAL_NONE = 2'd0,
+        SPECIAL_FENCE = 2'd1,
+        SPECIAL_ECALL = 2'd2,
+        SPECIAL_EBREAK = 2'd3
+    } special_op_t;
+```
+
+These enums form the control language between the decoder and the later CPU datapath.
+
+## Decoder outputs
+
+| Output | Purpose |
+| --- | --- |
+| `immediate_type` | Selects `IMM_I`, `IMM_S`, `IMM_B`, `IMM_U`, `IMM_J`, or `IMM_NONE` |
+| `alu_operation` | Selects the ALU operation |
+| `alu_a_select` | Selects `rs1`, the PC, or zero for the ALU left operand |
+| `alu_b_select` | Selects `rs2` or the generated immediate for the ALU right operand |
+| `writeback_select` | Selects the ALU result, memory result, `PC + 4`, or no writeback |
+| `branch_operation` | Selects the exact conditional branch comparison |
+| `jump_operation` | Selects `JAL`, `JALR`, or no jump |
+| `memory_size` | Selects byte, halfword, word, or no memory access |
+| `special_operation` | Selects `FENCE`, `ECALL`, `EBREAK`, or no special operation |
+| `register_write_enable` | Enables writing to `rd` |
+| `memory_read_enable` | Enables a data-memory read |
+| `memory_write_enable` | Enables a data-memory write |
+| `load_unsigned` | Selects zero extension for `LBU` and `LHU` |
+| `illegal_instruction` | Marks unsupported or invalid instruction encodings |
+
+## Safe default convention
+
+Every combinational evaluation begins with safe control values:
+
+```systemverilog
+immediate_type = IMM_NONE;
+alu_operation = ALU_ADD;
+alu_a_select = ALU_A_RS1;
+alu_b_select = ALU_B_RS2;
+writeback_select = WB_NONE;
+branch_operation = BRANCH_NONE;
+jump_operation = JUMP_NONE;
+memory_size = MEMORY_NONE;
+special_operation = SPECIAL_NONE;
+
+register_write_enable = 1'b0;
+memory_read_enable = 1'b0;
+memory_write_enable = 1'b0;
+load_unsigned = 1'b0;
+illegal_instruction = 1'b1;
+```
+
+A recognized instruction overwrites the controls it requires and clears `illegal_instruction`. Unsupported opcodes and invalid `funct3` or `funct7` combinations retain the defaults. This prevents an invalid instruction from accidentally writing a register or memory.
+
+## Instruction control behaviour
+
+| Instruction group | Immediate | ALU inputs | Writeback or action |
+| --- | --- | --- | --- |
+| `LUI` | U | Zero and immediate | Copy immediate to `rd` |
+| `AUIPC` | U | PC and immediate | Write `PC + immediate` to `rd` |
+| `JAL` | J | PC and immediate | Jump to ALU result and write `PC + 4` to `rd` |
+| `JALR` | I | `rs1` and immediate | Jump to ALU result with bit 0 cleared and write `PC + 4` to `rd` |
+| Branch | B | PC and immediate | Use branch comparison to conditionally select the target |
+| Load | I | `rs1` and immediate | Read memory at the ALU-generated address and write to `rd` |
+| Store | S | `rs1` and immediate | Write `rs2` to memory at the ALU-generated address |
+| OP-IMM | I | `rs1` and immediate | Write ALU result to `rd` |
+| OP | None | `rs1` and `rs2` | Write ALU result to `rd` |
+| `FENCE` | None | Unused | Legal memory-ordering operation; initially treated as no state change |
+| `ECALL`/`EBREAK` | None | Unused | Request a future trap or breakpoint action |
+
+## Decoder and immediate-generator interaction
+
+The `rv32_decode_stage` sub-top instantiates both combinational modules. The instruction is sent to both modules, while the decoder's `immediate_type` output controls how the immediate generator interprets the instruction bits.
+
+```mermaid
+flowchart TD
+    I["instruction[31:0]"]
+
+    subgraph S["rv32_decode_stage"]
+        D["rv32_decoder"]
+        G["rv32_imm_gen"]
+        F["Fixed field extraction"]
+
+        D -->|"immediate_type"| G
+    end
+
+    I --> D
+    I --> G
+    I --> F
+
+    D --> C["Control outputs"]
+    G --> M["immediate[31:0]"]
+    F --> R["rs1, rs2 and rd addresses"]
+```
+
+The fixed register fields are extracted directly because their positions do not change between instruction formats:
+
+```systemverilog
+assign rs1_address = instruction[19:15];
+assign rs2_address = instruction[24:20];
+assign rd_address = instruction[11:7];
+```
+
+## Decode-stage connection module
+
+File: `rtl/core/rv32_decode_stage.sv`
+
+```systemverilog
+module rv32_decode_stage (
+    input logic [31:0] instruction,
+
+    output logic [4:0] rs1_address,
+    output logic [4:0] rs2_address,
+    output logic [4:0] rd_address,
+    output logic [31:0] immediate,
+
+    output rv32_pkg::imm_type_t immediate_type,
+    output rv32_pkg::alu_op_t alu_operation,
+    output rv32_pkg::alu_a_sel_t alu_a_select,
+    output rv32_pkg::alu_b_sel_t alu_b_select,
+    output rv32_pkg::writeback_sel_t writeback_select,
+    output rv32_pkg::branch_op_t branch_operation,
+    output rv32_pkg::jump_op_t jump_operation,
+    output rv32_pkg::memory_size_t memory_size,
+    output rv32_pkg::special_op_t special_operation,
+
+    output logic register_write_enable,
+    output logic memory_read_enable,
+    output logic memory_write_enable,
+    output logic load_unsigned,
+    output logic illegal_instruction
+);
+
+    assign rs1_address = instruction[19:15];
+    assign rs2_address = instruction[24:20];
+    assign rd_address = instruction[11:7];
+
+    rv32_decoder decoder (
+        .instruction(instruction),
+        .immediate_type(immediate_type),
+        .alu_operation(alu_operation),
+        .alu_a_select(alu_a_select),
+        .alu_b_select(alu_b_select),
+        .writeback_select(writeback_select),
+        .branch_operation(branch_operation),
+        .jump_operation(jump_operation),
+        .memory_size(memory_size),
+        .special_operation(special_operation),
+        .register_write_enable(register_write_enable),
+        .memory_read_enable(memory_read_enable),
+        .memory_write_enable(memory_write_enable),
+        .load_unsigned(load_unsigned),
+        .illegal_instruction(illegal_instruction)
+    );
+
+    rv32_imm_gen immediate_generator (
+        .instruction(instruction),
+        .immediate_type(immediate_type),
+        .immediate(immediate)
+    );
+
+endmodule
+```
+
+## Decode-stage testbench objective
+
+The integration testbench verifies the decoder, immediate generator, register-field extraction, and their connections together. It covers all 40 implemented RV32I instructions and nine illegal or unsupported encodings.
+
+| Test group | Number of tests | Coverage |
+| --- | ---: | --- |
+| Upper immediate | 2 | `LUI`, `AUIPC` |
+| Jumps | 2 | `JAL`, `JALR` |
+| Branches | 6 | All signed, unsigned, equality, and inequality branches |
+| Loads | 5 | Byte, halfword, word, signed, and unsigned loads |
+| Stores | 3 | Byte, halfword, and word stores |
+| Immediate ALU | 9 | All RV32I OP-IMM operations |
+| Register ALU | 10 | All RV32I OP operations |
+| Special | 3 | `FENCE`, `ECALL`, `EBREAK` |
+| Illegal encodings | 9 | Invalid opcode, `funct3`, `funct7`, unsupported `FENCE.I`, and unsupported SYSTEM encoding |
+| **Total** | **49** | Complete decoder and integration coverage |
+
+For every valid instruction, the testbench checks:
+
+- `rs1_address`, `rs2_address`, and `rd_address`
+- The generated 32-bit immediate
+- Immediate, ALU, operand, writeback, branch, jump, memory, and special-operation controls
+- Register and memory enables
+- Signed or unsigned load selection
+- Illegal-instruction status
+
+For illegal instructions, it also verifies that register and memory writes remain disabled.
+
+## Decode-stage XSim output
+
+```text
+PASS: LUI instruction=123452b7 immediate=12345000
+PASS: AUIPC instruction=abcde317 immediate=abcde000
+PASS: JAL instruction=008000ef immediate=00000008
+PASS: JALR instruction=00c100e7 immediate=0000000c
+PASS: BEQ instruction=00208463 immediate=00000008
+PASS: BNE instruction=00209463 immediate=00000008
+PASS: BLT instruction=0020c463 immediate=00000008
+PASS: BGE instruction=0020d463 immediate=00000008
+PASS: BLTU instruction=0020e463 immediate=00000008
+PASS: BGEU instruction=0020f463 immediate=00000008
+PASS: LB instruction=00410183 immediate=00000004
+PASS: LH instruction=00411183 immediate=00000004
+PASS: LW instruction=00412183 immediate=00000004
+PASS: LBU instruction=00414183 immediate=00000004
+PASS: LHU instruction=00415183 immediate=00000004
+PASS: SB instruction=00310223 immediate=00000004
+PASS: SH instruction=00311223 immediate=00000004
+PASS: SW instruction=00312223 immediate=00000004
+PASS: ADDI instruction=00510193 immediate=00000005
+PASS: SLLI instruction=00511193 immediate=00000005
+PASS: SLTI instruction=00512193 immediate=00000005
+PASS: SLTIU instruction=00513193 immediate=00000005
+PASS: XORI instruction=00514193 immediate=00000005
+PASS: SRLI instruction=00515193 immediate=00000005
+PASS: SRAI instruction=40515193 immediate=00000405
+PASS: ORI instruction=00516193 immediate=00000005
+PASS: ANDI instruction=00517193 immediate=00000005
+PASS: ADD instruction=003100b3 immediate=00000000
+PASS: SUB instruction=403100b3 immediate=00000000
+PASS: SLL instruction=003110b3 immediate=00000000
+PASS: SLT instruction=003120b3 immediate=00000000
+PASS: SLTU instruction=003130b3 immediate=00000000
+PASS: XOR instruction=003140b3 immediate=00000000
+PASS: SRL instruction=003150b3 immediate=00000000
+PASS: SRA instruction=403150b3 immediate=00000000
+PASS: OR instruction=003160b3 immediate=00000000
+PASS: AND instruction=003170b3 immediate=00000000
+PASS: FENCE instruction=0ff0000f immediate=00000000
+PASS: ECALL instruction=00000073 immediate=00000000
+PASS: EBREAK instruction=00100073 immediate=00000000
+PASS: invalid opcode instruction=00000000
+PASS: invalid JALR funct3 instruction=00001067
+PASS: invalid branch funct3 instruction=0020a463
+PASS: invalid load funct3 instruction=00413183
+PASS: invalid store funct3 instruction=00313223
+PASS: invalid SLLI funct7 instruction=40511193
+PASS: unsupported R-type funct7 instruction=023100b3
+PASS: unsupported FENCE.I instruction=0000100f
+PASS: unsupported SYSTEM instruction instruction=00001073
+All 49 rv32_decode_stage tests passed.
+```
+
+## Decode-stage waveforms
+
+The first waveform covers upper-immediate instructions, jumps, branches, loads, stores, and the beginning of the immediate ALU tests.
+
+![Decode-stage waveform covering upper-immediate, jump, branch, load, store and immediate operations](Images/rv32_decode_stage_waveform_1.png)
+
+The second waveform covers the remaining immediate ALU operations, register-register ALU operations, and special instructions.
+
+![Decode-stage waveform covering immediate ALU, register ALU and special operations](Images/rv32_decode_stage_waveform_2.png)
+
+The third waveform shows the end of the valid instruction tests followed by all illegal encodings. During the illegal tests, `illegal_instruction` is asserted while register and memory write enables remain low.
+
+![Decode-stage waveform covering special and illegal instructions](Images/rv32_decode_stage_waveform_3.png)
+
+The `SRAI` test produces an immediate value of `32'h00000405`. This is correct: the lower five bits contain the shift amount of five, while the upper immediate bits distinguish `SRAI` from `SRLI`. The ALU uses only `rhs[4:0]` as the shift amount.
+
+## Phase 3 final result
+
+Phase 3 is complete. The optimized immediate generator passed all 12 standalone tests, and the combined decode stage passed all 49 integration tests with zero failures.
+
+The completed Phase 3 RTL consists of:
+
+```text
+rtl/core/rv32_pkg.sv
+rtl/core/rv32_imm_gen.sv
+rtl/core/rv32_decoder.sv
+rtl/core/rv32_decode_stage.sv
+```
+
+The verification files are:
+
+```text
+sim/tb/rv32_imm_gen_tb.sv
+sim/tb/rv32_decode_stage_tb.sv
+```
+
+The next project stage can begin after committing and merging the completed `phase-3-decode-immediates` branch.
