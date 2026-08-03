@@ -1,0 +1,1599 @@
+Timing Report
+
+Slack (VIOLATED) :        -7.907ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/DP/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.623ns  (logic 3.703ns (23.703%)  route 11.920ns (76.297%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.705ns = ( 12.705 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.239    17.766    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X111Y77        LUT6 (Prop_lut6_I1_O)        0.124    17.890 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_30_31__0_i_2/O
+                         net (fo=1, routed)           1.249    19.139    core_interconnect/control_flow/pc_register/load_data[2]
+    SLICE_X108Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.263 r  core_interconnect/control_flow/pc_register/registers_reg_r1_0_31_30_31__0_i_1/O
+                         net (fo=4, routed)           1.513    20.776    core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/D
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/DP/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.668    12.705    core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/WCLK
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/DP/CLK
+                         clock pessimism              0.458    13.163    
+                         clock uncertainty           -0.035    13.127    
+    SLICE_X108Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.258    12.869    core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/DP
+  -------------------------------------------------------------------
+                         required time                         12.869    
+                         arrival time                         -20.776    
+  -------------------------------------------------------------------
+                         slack                                 -7.907    
+
+Slack (VIOLATED) :        -7.900ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.572ns  (logic 3.703ns (23.780%)  route 11.869ns (76.220%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.365    17.891    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X104Y77        LUT6 (Prop_lut6_I1_O)        0.124    18.015 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_24_29_i_12/O
+                         net (fo=1, routed)           1.145    19.160    core_interconnect/control_flow/next_pc_selector/load_data[11]
+    SLICE_X103Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.284 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_24_29_i_3/O
+                         net (fo=3, routed)           1.441    20.725    core_interconnect/register_file/registers_reg_r1_0_31_24_29/DIB1
+    SLICE_X104Y76        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_24_29/WCLK
+    SLICE_X104Y76        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB_D1/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X104Y76        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.228    12.825    core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB_D1
+  -------------------------------------------------------------------
+                         required time                         12.825    
+                         arrival time                         -20.725    
+  -------------------------------------------------------------------
+                         slack                                 -7.900    
+
+Slack (VIOLATED) :        -7.872ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMB_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.544ns  (logic 3.703ns (23.823%)  route 11.841ns (76.177%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.437    17.963    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X103Y76        LUT6 (Prop_lut6_I1_O)        0.124    18.087 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_18_23_i_12/O
+                         net (fo=1, routed)           0.995    19.082    core_interconnect/control_flow/next_pc_selector/load_data[5]
+    SLICE_X103Y76        LUT6 (Prop_lut6_I4_O)        0.124    19.206 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_18_23_i_3/O
+                         net (fo=3, routed)           1.492    20.697    core_interconnect/register_file/registers_reg_r1_0_31_18_23/DIB1
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMB_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_18_23/WCLK
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMB_D1/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X102Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.228    12.825    core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMB_D1
+  -------------------------------------------------------------------
+                         required time                         12.825    
+                         arrival time                         -20.697    
+  -------------------------------------------------------------------
+                         slack                                 -7.872    
+
+Slack (VIOLATED) :        -7.841ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMB_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.557ns  (logic 3.703ns (23.803%)  route 11.854ns (76.197%))
+  Logic Levels:           10  (CARRY4=3 LUT5=2 LUT6=3 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.021ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.638ns = ( 12.638 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.495ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.197    17.723    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X112Y72        LUT6 (Prop_lut6_I5_O)        0.124    17.847 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[9]_inst_i_2/O
+                         net (fo=2, routed)           1.064    18.912    core_interconnect/control_flow/next_pc_selector/load_data__0[8]
+    SLICE_X112Y72        LUT5 (Prop_lut5_I4_O)        0.124    19.036 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_6_11_i_3/O
+                         net (fo=3, routed)           1.675    20.711    core_interconnect/register_file/registers_reg_r1_0_31_6_11/DIB1
+    SLICE_X104Y67        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMB_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.601    12.638    core_interconnect/register_file/registers_reg_r1_0_31_6_11/WCLK
+    SLICE_X104Y67        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMB_D1/CLK
+                         clock pessimism              0.495    13.133    
+                         clock uncertainty           -0.035    13.097    
+    SLICE_X104Y67        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.228    12.869    core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMB_D1
+  -------------------------------------------------------------------
+                         required time                         12.869    
+                         arrival time                         -20.711    
+  -------------------------------------------------------------------
+                         slack                                 -7.841    
+
+Slack (VIOLATED) :        -7.835ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.548ns  (logic 3.703ns (23.816%)  route 11.845ns (76.184%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.067ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.629ns = ( 12.629 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.198    17.724    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X103Y78        LUT6 (Prop_lut6_I1_O)        0.124    17.848 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_24_29_i_14/O
+                         net (fo=1, routed)           1.266    19.114    core_interconnect/control_flow/next_pc_selector/load_data[10]
+    SLICE_X102Y78        LUT6 (Prop_lut6_I4_O)        0.124    19.238 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_24_29_i_4/O
+                         net (fo=3, routed)           1.463    20.702    core_interconnect/register_file/registers_reg_r2_0_31_24_29/DIB0
+    SLICE_X102Y75        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.592    12.629    core_interconnect/register_file/registers_reg_r2_0_31_24_29/WCLK
+    SLICE_X102Y75        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB/CLK
+                         clock pessimism              0.458    13.087    
+                         clock uncertainty           -0.035    13.051    
+    SLICE_X102Y75        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.185    12.866    core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB
+  -------------------------------------------------------------------
+                         required time                         12.866    
+                         arrival time                         -20.702    
+  -------------------------------------------------------------------
+                         slack                                 -7.835    
+
+Slack (VIOLATED) :        -7.835ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_30_31__0/DP/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.571ns  (logic 3.703ns (23.782%)  route 11.868ns (76.218%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.705ns = ( 12.705 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.239    17.766    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X111Y77        LUT6 (Prop_lut6_I1_O)        0.124    17.890 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_30_31__0_i_2/O
+                         net (fo=1, routed)           1.249    19.139    core_interconnect/control_flow/pc_register/load_data[2]
+    SLICE_X108Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.263 r  core_interconnect/control_flow/pc_register/registers_reg_r1_0_31_30_31__0_i_1/O
+                         net (fo=4, routed)           1.461    20.724    core_interconnect/register_file/registers_reg_r1_0_31_30_31__0/D
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_30_31__0/DP/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.668    12.705    core_interconnect/register_file/registers_reg_r1_0_31_30_31__0/WCLK
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_30_31__0/DP/CLK
+                         clock pessimism              0.458    13.163    
+                         clock uncertainty           -0.035    13.127    
+    SLICE_X108Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.238    12.889    core_interconnect/register_file/registers_reg_r1_0_31_30_31__0/DP
+  -------------------------------------------------------------------
+                         required time                         12.889    
+                         arrival time                         -20.724    
+  -------------------------------------------------------------------
+                         slack                                 -7.835    
+
+Slack (VIOLATED) :        -7.785ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_12_17/RAMC/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.511ns  (logic 3.703ns (23.874%)  route 11.808ns (76.126%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.064ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.632ns = ( 12.632 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.192    17.718    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X99Y74         LUT6 (Prop_lut6_I1_O)        0.124    17.842 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_12_17_i_15/O
+                         net (fo=1, routed)           1.136    18.978    core_interconnect/control_flow/next_pc_selector/load_data[0]
+    SLICE_X99Y72         LUT6 (Prop_lut6_I4_O)        0.124    19.102 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_12_17_i_6/O
+                         net (fo=3, routed)           1.562    20.664    core_interconnect/register_file/registers_reg_r1_0_31_12_17/DIC0
+    SLICE_X102Y72        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_12_17/RAMC/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.595    12.632    core_interconnect/register_file/registers_reg_r1_0_31_12_17/WCLK
+    SLICE_X102Y72        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_12_17/RAMC/CLK
+                         clock pessimism              0.458    13.090    
+                         clock uncertainty           -0.035    13.054    
+    SLICE_X102Y72        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.175    12.879    core_interconnect/register_file/registers_reg_r1_0_31_12_17/RAMC
+  -------------------------------------------------------------------
+                         required time                         12.879    
+                         arrival time                         -20.664    
+  -------------------------------------------------------------------
+                         slack                                 -7.785    
+
+Slack (VIOLATED) :        -7.772ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/SP/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.517ns  (logic 3.703ns (23.864%)  route 11.814ns (76.136%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.705ns = ( 12.705 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.239    17.766    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X111Y77        LUT6 (Prop_lut6_I1_O)        0.124    17.890 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_30_31__0_i_2/O
+                         net (fo=1, routed)           1.249    19.139    core_interconnect/control_flow/pc_register/load_data[2]
+    SLICE_X108Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.263 r  core_interconnect/control_flow/pc_register/registers_reg_r1_0_31_30_31__0_i_1/O
+                         net (fo=4, routed)           1.408    20.671    core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/D
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/SP/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.668    12.705    core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/WCLK
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/SP/CLK
+                         clock pessimism              0.458    13.163    
+                         clock uncertainty           -0.035    13.127    
+    SLICE_X108Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.228    12.899    core_interconnect/register_file/registers_reg_r2_0_31_30_31__0/SP
+  -------------------------------------------------------------------
+                         required time                         12.899    
+                         arrival time                         -20.671    
+  -------------------------------------------------------------------
+                         slack                                 -7.772    
+
+Slack (VIOLATED) :        -7.747ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMC_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.398ns  (logic 3.703ns (24.048%)  route 11.695ns (75.952%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.187    17.713    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X104Y79        LUT6 (Prop_lut6_I1_O)        0.124    17.837 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_18_23_i_16/O
+                         net (fo=1, routed)           1.122    18.959    core_interconnect/control_flow/next_pc_selector/load_data[7]
+    SLICE_X105Y78        LUT6 (Prop_lut6_I4_O)        0.124    19.083 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_18_23_i_5/O
+                         net (fo=3, routed)           1.468    20.552    core_interconnect/register_file/registers_reg_r1_0_31_18_23/DIC1
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMC_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_18_23/WCLK
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMC_D1/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X102Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.249    12.804    core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMC_D1
+  -------------------------------------------------------------------
+                         required time                         12.804    
+                         arrival time                         -20.552    
+  -------------------------------------------------------------------
+                         slack                                 -7.747    
+
+Slack (VIOLATED) :        -7.743ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.412ns  (logic 3.703ns (24.026%)  route 11.709ns (75.974%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.067ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.629ns = ( 12.629 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.365    17.891    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X104Y77        LUT6 (Prop_lut6_I1_O)        0.124    18.015 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_24_29_i_12/O
+                         net (fo=1, routed)           1.145    19.160    core_interconnect/control_flow/next_pc_selector/load_data[11]
+    SLICE_X103Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.284 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_24_29_i_3/O
+                         net (fo=3, routed)           1.282    20.566    core_interconnect/register_file/registers_reg_r2_0_31_24_29/DIB1
+    SLICE_X102Y75        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.592    12.629    core_interconnect/register_file/registers_reg_r2_0_31_24_29/WCLK
+    SLICE_X102Y75        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB_D1/CLK
+                         clock pessimism              0.458    13.087    
+                         clock uncertainty           -0.035    13.051    
+    SLICE_X102Y75        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.228    12.823    core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMB_D1
+  -------------------------------------------------------------------
+                         required time                         12.823    
+                         arrival time                         -20.566    
+  -------------------------------------------------------------------
+                         slack                                 -7.743    
+
+Slack (VIOLATED) :        -7.728ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMB/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.483ns  (logic 3.703ns (23.916%)  route 11.780ns (76.084%))
+  Logic Levels:           10  (CARRY4=3 LUT5=2 LUT6=3 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.024ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.635ns = ( 12.635 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.495ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.326    17.852    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X108Y67        LUT6 (Prop_lut6_I5_O)        0.124    17.976 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[8]_inst_i_2/O
+                         net (fo=2, routed)           0.880    18.856    core_interconnect/control_flow/next_pc_selector/load_data__0[7]
+    SLICE_X107Y67        LUT5 (Prop_lut5_I4_O)        0.124    18.980 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_6_11_i_4/O
+                         net (fo=3, routed)           1.657    20.637    core_interconnect/register_file/registers_reg_r2_0_31_6_11/DIB0
+    SLICE_X104Y70        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMB/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.598    12.635    core_interconnect/register_file/registers_reg_r2_0_31_6_11/WCLK
+    SLICE_X104Y70        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMB/CLK
+                         clock pessimism              0.495    13.130    
+                         clock uncertainty           -0.035    13.094    
+    SLICE_X104Y70        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.185    12.909    core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMB
+  -------------------------------------------------------------------
+                         required time                         12.909    
+                         arrival time                         -20.637    
+  -------------------------------------------------------------------
+                         slack                                 -7.728    
+
+Slack (VIOLATED) :        -7.711ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.405ns  (logic 3.579ns (23.232%)  route 11.826ns (76.768%))
+  Logic Levels:           9  (CARRY4=3 LUT5=1 LUT6=3 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.021ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.638ns = ( 12.638 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.495ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.624    14.226    core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/A6
+    SLICE_X98Y68         MUXF7 (Prop_muxf7_S_O)       0.489    14.715 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/F7.B/O
+                         net (fo=1, routed)           0.000    14.715    core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/O0
+    SLICE_X98Y68         MUXF8 (Prop_muxf8_I0_O)      0.098    14.813 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/F8/O
+                         net (fo=2, routed)           1.511    16.323    core_interconnect/memory_stage/data_memory/memory_read_data0[11]
+    SLICE_X108Y68        LUT6 (Prop_lut6_I5_O)        0.319    16.642 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[11]_inst_i_4/O
+                         net (fo=1, routed)           1.209    17.851    core_interconnect/memory_stage/data_memory/p_3_in[11]
+    SLICE_X108Y68        LUT6 (Prop_lut6_I1_O)        0.124    17.975 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[11]_inst_i_2/O
+                         net (fo=2, routed)           0.934    18.909    core_interconnect/control_flow/next_pc_selector/load_data__0[10]
+    SLICE_X108Y68        LUT5 (Prop_lut5_I4_O)        0.124    19.033 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_6_11_i_5/O
+                         net (fo=3, routed)           1.526    20.559    core_interconnect/register_file/registers_reg_r1_0_31_6_11/DIC1
+    SLICE_X104Y67        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.601    12.638    core_interconnect/register_file/registers_reg_r1_0_31_6_11/WCLK
+    SLICE_X104Y67        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC_D1/CLK
+                         clock pessimism              0.495    13.133    
+                         clock uncertainty           -0.035    13.097    
+    SLICE_X104Y67        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.249    12.848    core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC_D1
+  -------------------------------------------------------------------
+                         required time                         12.848    
+                         arrival time                         -20.559    
+  -------------------------------------------------------------------
+                         slack                                 -7.711    
+
+Slack (VIOLATED) :        -7.685ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.424ns  (logic 3.703ns (24.008%)  route 11.721ns (75.992%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.283    17.810    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X103Y77        LUT6 (Prop_lut6_I1_O)        0.124    17.934 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_18_23_i_10/O
+                         net (fo=1, routed)           1.048    18.982    core_interconnect/control_flow/next_pc_selector/load_data[2]
+    SLICE_X103Y76        LUT6 (Prop_lut6_I4_O)        0.124    19.106 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_18_23_i_2/O
+                         net (fo=3, routed)           1.472    20.577    core_interconnect/register_file/registers_reg_r1_0_31_18_23/DIA0
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_18_23/WCLK
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X102Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.161    12.892    core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA
+  -------------------------------------------------------------------
+                         required time                         12.892    
+                         arrival time                         -20.577    
+  -------------------------------------------------------------------
+                         slack                                 -7.685    
+
+Slack (VIOLATED) :        -7.675ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMC_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.367ns  (logic 3.579ns (23.291%)  route 11.788ns (76.709%))
+  Logic Levels:           9  (CARRY4=3 LUT5=1 LUT6=3 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.024ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.635ns = ( 12.635 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.495ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.624    14.226    core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/A6
+    SLICE_X98Y68         MUXF7 (Prop_muxf7_S_O)       0.489    14.715 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/F7.B/O
+                         net (fo=1, routed)           0.000    14.715    core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/O0
+    SLICE_X98Y68         MUXF8 (Prop_muxf8_I0_O)      0.098    14.813 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_11_11/F8/O
+                         net (fo=2, routed)           1.511    16.323    core_interconnect/memory_stage/data_memory/memory_read_data0[11]
+    SLICE_X108Y68        LUT6 (Prop_lut6_I5_O)        0.319    16.642 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[11]_inst_i_4/O
+                         net (fo=1, routed)           1.209    17.851    core_interconnect/memory_stage/data_memory/p_3_in[11]
+    SLICE_X108Y68        LUT6 (Prop_lut6_I1_O)        0.124    17.975 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[11]_inst_i_2/O
+                         net (fo=2, routed)           0.934    18.909    core_interconnect/control_flow/next_pc_selector/load_data__0[10]
+    SLICE_X108Y68        LUT5 (Prop_lut5_I4_O)        0.124    19.033 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_6_11_i_5/O
+                         net (fo=3, routed)           1.487    20.520    core_interconnect/register_file/registers_reg_r2_0_31_6_11/DIC1
+    SLICE_X104Y70        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMC_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.598    12.635    core_interconnect/register_file/registers_reg_r2_0_31_6_11/WCLK
+    SLICE_X104Y70        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMC_D1/CLK
+                         clock pessimism              0.495    13.130    
+                         clock uncertainty           -0.035    13.094    
+    SLICE_X104Y70        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.249    12.845    core_interconnect/register_file/registers_reg_r2_0_31_6_11/RAMC_D1
+  -------------------------------------------------------------------
+                         required time                         12.845    
+                         arrival time                         -20.520    
+  -------------------------------------------------------------------
+                         slack                                 -7.675    
+
+Slack (VIOLATED) :        -7.670ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMA_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.311ns  (logic 3.703ns (24.185%)  route 11.608ns (75.815%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.234    17.761    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X99Y77         LUT6 (Prop_lut6_I1_O)        0.124    17.885 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_24_29_i_8/O
+                         net (fo=1, routed)           1.081    18.965    core_interconnect/control_flow/next_pc_selector/load_data[9]
+    SLICE_X101Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.089 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_24_29_i_1/O
+                         net (fo=3, routed)           1.376    20.465    core_interconnect/register_file/registers_reg_r1_0_31_24_29/DIA1
+    SLICE_X104Y76        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMA_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_24_29/WCLK
+    SLICE_X104Y76        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMA_D1/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X104Y76        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.258    12.795    core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMA_D1
+  -------------------------------------------------------------------
+                         required time                         12.795    
+                         arrival time                         -20.465    
+  -------------------------------------------------------------------
+                         slack                                 -7.670    
+
+Slack (VIOLATED) :        -7.661ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMA_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.300ns  (logic 3.703ns (24.202%)  route 11.597ns (75.798%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.067ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.629ns = ( 12.629 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.234    17.761    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X99Y77         LUT6 (Prop_lut6_I1_O)        0.124    17.885 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_24_29_i_8/O
+                         net (fo=1, routed)           1.081    18.965    core_interconnect/control_flow/next_pc_selector/load_data[9]
+    SLICE_X101Y77        LUT6 (Prop_lut6_I4_O)        0.124    19.089 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_24_29_i_1/O
+                         net (fo=3, routed)           1.365    20.454    core_interconnect/register_file/registers_reg_r2_0_31_24_29/DIA1
+    SLICE_X102Y75        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMA_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.592    12.629    core_interconnect/register_file/registers_reg_r2_0_31_24_29/WCLK
+    SLICE_X102Y75        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMA_D1/CLK
+                         clock pessimism              0.458    13.087    
+                         clock uncertainty           -0.035    13.051    
+    SLICE_X102Y75        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.258    12.793    core_interconnect/register_file/registers_reg_r2_0_31_24_29/RAMA_D1
+  -------------------------------------------------------------------
+                         required time                         12.793    
+                         arrival time                         -20.454    
+  -------------------------------------------------------------------
+                         slack                                 -7.661    
+
+Slack (VIOLATED) :        -7.660ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.375ns  (logic 3.703ns (24.085%)  route 11.672ns (75.915%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.198    17.724    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X103Y78        LUT6 (Prop_lut6_I1_O)        0.124    17.848 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_24_29_i_14/O
+                         net (fo=1, routed)           1.266    19.114    core_interconnect/control_flow/next_pc_selector/load_data[10]
+    SLICE_X102Y78        LUT6 (Prop_lut6_I4_O)        0.124    19.238 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_24_29_i_4/O
+                         net (fo=3, routed)           1.290    20.528    core_interconnect/register_file/registers_reg_r1_0_31_24_29/DIB0
+    SLICE_X104Y76        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_24_29/WCLK
+    SLICE_X104Y76        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X104Y76        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.185    12.868    core_interconnect/register_file/registers_reg_r1_0_31_24_29/RAMB
+  -------------------------------------------------------------------
+                         required time                         12.868    
+                         arrival time                         -20.528    
+  -------------------------------------------------------------------
+                         slack                                 -7.660    
+
+Slack (VIOLATED) :        -7.656ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r2_0_31_30_31/DP/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.222ns  (logic 3.703ns (24.326%)  route 11.519ns (75.674%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.705ns = ( 12.705 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.017    17.543    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X108Y76        LUT6 (Prop_lut6_I1_O)        0.124    17.667 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_30_31_i_2/O
+                         net (fo=1, routed)           1.111    18.777    core_interconnect/control_flow/pc_register/load_data[1]
+    SLICE_X108Y74        LUT6 (Prop_lut6_I4_O)        0.124    18.901 r  core_interconnect/control_flow/pc_register/registers_reg_r1_0_31_30_31_i_1/O
+                         net (fo=5, routed)           1.474    20.376    core_interconnect/register_file/registers_reg_r2_0_31_30_31/D
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_30_31/DP/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.668    12.705    core_interconnect/register_file/registers_reg_r2_0_31_30_31/WCLK
+    SLICE_X108Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r2_0_31_30_31/DP/CLK
+                         clock pessimism              0.458    13.163    
+                         clock uncertainty           -0.035    13.127    
+    SLICE_X108Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.407    12.720    core_interconnect/register_file/registers_reg_r2_0_31_30_31/DP
+  -------------------------------------------------------------------
+                         required time                         12.720    
+                         arrival time                         -20.376    
+  -------------------------------------------------------------------
+                         slack                                 -7.656    
+
+Slack (VIOLATED) :        -7.638ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.407ns  (logic 3.703ns (24.035%)  route 11.704ns (75.965%))
+  Logic Levels:           10  (CARRY4=3 LUT5=2 LUT6=3 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.021ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.638ns = ( 12.638 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.495ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.308    17.834    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X106Y66        LUT6 (Prop_lut6_I5_O)        0.124    17.958 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[10]_inst_i_2/O
+                         net (fo=2, routed)           0.903    18.861    core_interconnect/control_flow/next_pc_selector/load_data__0[9]
+    SLICE_X106Y66        LUT5 (Prop_lut5_I4_O)        0.124    18.985 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_6_11_i_6/O
+                         net (fo=3, routed)           1.575    20.560    core_interconnect/register_file/registers_reg_r1_0_31_6_11/DIC0
+    SLICE_X104Y67        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.601    12.638    core_interconnect/register_file/registers_reg_r1_0_31_6_11/WCLK
+    SLICE_X104Y67        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC/CLK
+                         clock pessimism              0.495    13.133    
+                         clock uncertainty           -0.035    13.097    
+    SLICE_X104Y67        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.175    12.922    core_interconnect/register_file/registers_reg_r1_0_31_6_11/RAMC
+  -------------------------------------------------------------------
+                         required time                         12.922    
+                         arrival time                         -20.560    
+  -------------------------------------------------------------------
+                         slack                                 -7.638    
+
+Slack (VIOLATED) :        -7.616ns  (required time - arrival time)
+  Source:                 core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA_D1/I
+                            (rising edge-triggered cell RAMD32 clocked by core_clk  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             core_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (core_clk rise@8.000ns - core_clk rise@0.000ns)
+  Data Path Delay:        15.258ns  (logic 3.703ns (24.269%)  route 11.555ns (75.731%))
+  Logic Levels:           10  (CARRY4=3 LUT5=1 LUT6=4 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.065ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.631ns = ( 12.631 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.154ns
+    Clock Pessimism Removal (CPR):    0.458ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock core_clk rise edge)
+                                                      0.000     0.000 r  
+    U14                                               0.000     0.000 r  clk (IN)
+                         net (fo=0)                   0.000     0.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         1.075     1.075 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.205     3.280    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101     3.381 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.773     5.154    core_interconnect/register_file/registers_reg_r1_0_31_0_5/WCLK
+    SLICE_X104Y69        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/CLK
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y69        RAMD32 (Prop_ramd32_CLK_O)
+                                                      1.343     6.497 r  core_interconnect/register_file/registers_reg_r1_0_31_0_5/RAMB/O
+                         net (fo=13, routed)          1.452     7.949    core_interconnect/register_file/rs1_data0[2]
+    SLICE_X103Y70        LUT6 (Prop_lut6_I0_O)        0.348     8.297 r  core_interconnect/register_file/load_store_address_adder_i_30/O
+                         net (fo=1, routed)           1.571     9.868    core_interconnect/load_store_address_adder/base[2]
+    SLICE_X103Y72        CARRY4 (Prop_carry4_DI[2]_CO[3])
+                                                      0.398    10.266 r  core_interconnect/load_store_address_adder/address[0]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.266    core_interconnect/load_store_address_adder/address[0]_INST_0_n_0
+    SLICE_X103Y73        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    10.380 r  core_interconnect/load_store_address_adder/address[4]_INST_0/CO[3]
+                         net (fo=1, routed)           0.000    10.380    core_interconnect/load_store_address_adder/address[4]_INST_0_n_0
+    SLICE_X103Y74        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    10.602 r  core_interconnect/load_store_address_adder/address[8]_INST_0/O[0]
+                         net (fo=192, routed)         3.504    14.106    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/A6
+    SLICE_X104Y74        MUXF7 (Prop_muxf7_S_O)       0.489    14.595 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F7.B/O
+                         net (fo=1, routed)           0.000    14.595    core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/O0
+    SLICE_X104Y74        MUXF8 (Prop_muxf8_I0_O)      0.098    14.693 r  core_interconnect/memory_stage/data_memory/memory_reg_0_255_23_23/F8/O
+                         net (fo=4, routed)           0.511    15.203    core_interconnect/memory_stage/data_memory/memory_read_data0[23]
+    SLICE_X105Y76        LUT5 (Prop_lut5_I4_O)        0.319    15.522 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7/O
+                         net (fo=2, routed)           0.880    16.402    core_interconnect/memory_stage/data_memory/debug_data_OBUF[30]_inst_i_7_n_0
+    SLICE_X106Y76        LUT6 (Prop_lut6_I3_O)        0.124    16.526 r  core_interconnect/memory_stage/data_memory/debug_data_OBUF[15]_inst_i_6/O
+                         net (fo=24, routed)          1.277    17.804    core_interconnect/memory_stage/data_memory/p_3_in[7]
+    SLICE_X97Y75         LUT6 (Prop_lut6_I1_O)        0.124    17.928 r  core_interconnect/memory_stage/data_memory/registers_reg_r1_0_31_18_23_i_8/O
+                         net (fo=1, routed)           0.783    18.711    core_interconnect/control_flow/next_pc_selector/load_data[3]
+    SLICE_X99Y75         LUT6 (Prop_lut6_I4_O)        0.124    18.835 r  core_interconnect/control_flow/next_pc_selector/registers_reg_r1_0_31_18_23_i_1/O
+                         net (fo=3, routed)           1.577    20.411    core_interconnect/register_file/registers_reg_r1_0_31_18_23/DIA1
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA_D1/I
+  -------------------------------------------------------------------    -------------------
+
+                         (clock core_clk rise edge)
+                                                      8.000     8.000 r  
+    U14                                               0.000     8.000 r  clk (IN)
+                         net (fo=0)                   0.000     8.000    clk
+    U14                  IBUF (Prop_ibuf_I_O)         0.940     8.940 r  clk_IBUF_inst/O
+                         net (fo=1, routed)           2.006    10.946    clk_IBUF
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    11.037 r  clk_IBUF_BUFG_inst/O
+                         net (fo=248, routed)         1.594    12.631    core_interconnect/register_file/registers_reg_r1_0_31_18_23/WCLK
+    SLICE_X102Y73        RAMD32                                       r  core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA_D1/CLK
+                         clock pessimism              0.458    13.089    
+                         clock uncertainty           -0.035    13.053    
+    SLICE_X102Y73        RAMD32 (Setup_ramd32_CLK_I)
+                                                     -0.258    12.795    core_interconnect/register_file/registers_reg_r1_0_31_18_23/RAMA_D1
+  -------------------------------------------------------------------
+                         required time                         12.795    
+                         arrival time                         -20.411    
+  -------------------------------------------------------------------
+                         slack                                 -7.616    
+
+
