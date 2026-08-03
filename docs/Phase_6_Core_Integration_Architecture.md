@@ -938,3 +938,152 @@ The warnings can be removed later by adding a common timescale directive to the 
 | Compiled assembly-program execution | Not yet tested |
 
 The verified interconnect now provides the complete execution datapath required by the final core. The next task is to connect instruction memory to `pc` and `instruction`, place the interconnect inside the final `rv32_core` wrapper and run a compiled assembly program without testbench-driven instruction injection.
+
+## Post-route timing characterization
+
+The first physical implementation was constrained to a 125 MHz core clock:
+
+```text
+Target clock period = 8.000 ns
+Target frequency    = 125.00 MHz
+```
+
+The latest routed timing result reports:
+
+```text
+Worst negative slack = -10.747 ns
+```
+
+Negative setup slack means the longest register-to-register path cannot complete within the requested 8 ns clock period. The approximate period required by the current routed circuit is:
+
+```text
+Required period ≈ target period + |worst negative slack|
+                ≈ 8.000 ns + 10.747 ns
+                ≈ 18.747 ns
+```
+
+The corresponding estimated maximum clock frequency is:
+
+```text
+Fmax ≈ 1 / 18.747 ns
+     ≈ 53.34 MHz
+```
+
+| Timing quantity | Current result |
+| --- | ---: |
+| Requested frequency | 125.00 MHz |
+| Requested period | 8.000 ns |
+| Latest worst negative slack | -10.747 ns |
+| Estimated minimum period | 18.747 ns |
+| Estimated current maximum frequency | **53.34 MHz** |
+| Fraction of the 125 MHz target reached | 42.7% |
+| Frequency increase required to reach 125 MHz | Approximately 2.34× |
+
+The 53.34 MHz value is a post-route timing estimate for this particular synthesis, placement and routing result. It is not yet a measured FPGA operating limit. A final maximum frequency should be confirmed by repeating implementation with progressively shorter clock periods and then testing the resulting bitstream on the FPGA.
+
+## Critical path identified by Vivado
+
+The worst path is the single-cycle load-to-register-writeback path. It begins at a clocked register-file storage element, passes through the complete load datapath and ends at the register-file write input:
+
+```text
+Register-file read
+→ ALU operand and effective-address logic
+→ distributed data-memory address network
+→ asynchronous data-memory read
+→ memory output selection
+→ load lane selection and extension
+→ writeback selection
+→ register-file write input
+```
+
+The detailed timing report captured the following structure on the critical path:
+
+| Path property | Reported value |
+| --- | ---: |
+| Data-path delay | 18.819 ns |
+| Logic delay | 3.215 ns |
+| Routing delay | 15.604 ns |
+| Logic levels | 13 |
+| Logic-delay share | 17.1% |
+| Routing-delay share | 82.9% |
+| Main primitives | `RAMD32`, `LUT5`, `LUT6`, `RAMS64E`, `MUXF7`, `MUXF8` |
+
+These detailed values came from the initial routed report with `WNS = -11.165 ns`. A later implementation improved WNS to `-10.747 ns`, producing the current 53.34 MHz estimate. The exact logic-versus-route split can move slightly between implementation runs, but the path structure and routing-dominated limitation remain the important findings.
+
+## Sources of frequency loss
+
+### 1. Complete load execution occurs in one clock cycle
+
+The main architectural limitation is the single-cycle datapath. A load must read `rs1`, calculate the effective address, read data memory, select the required byte or halfword, extend it, select the memory writeback source and reach the destination-register input before the next rising edge.
+
+This is substantially longer than an ordinary ALU instruction. Because the clock period must accommodate the slowest legal instruction, the load path sets the frequency limit for the whole processor.
+
+### 2. Data memory uses an asynchronous distributed-RAM read
+
+The current data memory returns read data combinationally in the same cycle. This behaviour supports the single-cycle design but prevents the memory from using the FPGA's fastest normal block-RAM arrangement, whose read path is clocked.
+
+Vivado implemented the memory using distributed LUT RAM and output multiplexers. The critical path includes a `RAMS64E`, a `MUXF7` and a `MUXF8`, showing that the 256-word memory requires both distributed storage and selection logic before the loaded data is available.
+
+### 3. Routing dominates the delay
+
+The measured path contains approximately 3.215 ns of logic delay but 15.604 ns of routing delay. Therefore, replacing one small Boolean expression with another equivalent expression is unlikely to create a large improvement by itself.
+
+The larger problem is that the signal travels between physically separated register-file, ALU, memory and writeback resources. The FPGA must route that complete loop across the device within one cycle.
+
+### 4. Several internal nets have very high fanout
+
+The high-fanout report includes internal nets with fanouts of 768, 640, 515 and 512. A single driver feeding hundreds of loads requires a large routing tree. This adds capacitance, consumes routing resources and can force the connected logic farther apart.
+
+The highest-fanout signals are associated with the ALU/effective-address network and the distributed memory implementation. This agrees with the timing report: memory addressing and routing, rather than the raw 32-bit addition alone, are the dominant problems.
+
+### 5. One general ALU is shared by multiple instruction paths
+
+The general ALU produces arithmetic results, load/store addresses and control-transfer targets. Sharing the hardware saves area, but the ALU result and its operand-selection logic fan out toward the writeback, memory and control-flow blocks.
+
+For loads and stores, the address is always `rs1_data + immediate`. A dedicated load/store address adder would consume more hardware but could be placed beside the memory stage and reduce the distance and fanout of the effective-address path.
+
+### 6. Load formatting adds logic after the memory read
+
+The memory returns an aligned 32-bit word. The load/store unit must then use the two low address bits to select a byte or halfword and must perform either sign extension or zero extension. The writeback multiplexer follows this formatting logic.
+
+This means the memory output is not the end of the load path. Several more selection stages must still be crossed before the result reaches `rd_data`.
+
+### 7. The register file also uses distributed FPGA resources
+
+The two combinational register-file read ports and one clocked write port map to distributed-RAM primitives such as `RAMD32`. This provides the behaviour required by the current core, but it places the beginning and end of the critical path in configurable-logic slices rather than in a compact dedicated processor register-file structure.
+
+The physical distance between the read copy, load datapath and write copy contributes to the large routing component.
+
+### 8. The path contains 13 combinational levels
+
+The report shows 13 logic levels, including nine `LUT6` elements in addition to the memory and multiplexer primitives. Although the individual LUT delays are small, every level adds a net that must also be routed. The accumulation of many short logic operations and long interconnect segments creates the 18 ns-class total delay.
+
+### 9. Debug exposure can influence placement, but it is not the primary cause
+
+The timing wrapper reduces the external pin count by selecting internal debug values through a smaller output interface. False-path constraints prevent the debug output timing itself from setting the core clock limit.
+
+However, debug selection logic can still share internal signals and slightly influence placement or fanout. It should be reduced or removed for final frequency measurements, but the timing report shows that the fundamental problem is still the single-cycle register-file-to-memory-to-register-file path.
+
+## Factors that are not currently the main limitation
+
+| Factor | Timing evidence |
+| --- | --- |
+| Hold timing | No failing hold endpoints were reported |
+| Clock uncertainty | Approximately 0.035 ns, very small compared with the data-path delay |
+| Clock skew | Small compared with the 10.747 ns setup failure |
+| General routing congestion | Vivado reported no congestion windows above level 5 |
+| Simulation correctness | All 95 functional interconnect tests passed; the problem is physical timing, not the tested logic function |
+
+## Timing-optimization priority
+
+The recommended order for single-cycle hardware optimization is:
+
+1. Add a dedicated load/store effective-address adder near the memory stage.
+2. Reorganize data memory into explicitly banked 64-word byte lanes to reduce address fanout and large output selection networks.
+3. Replace the variable load-data shift with explicit byte and halfword lane selection.
+4. Replicate only the worst high-fanout address/control drivers and keep each copy local to its consumers.
+5. Compare Vivado physical-optimization directives after each RTL change.
+6. Apply light floorplanning only after the datapath topology has been improved.
+7. If 125 MHz remains unreachable, add a pipeline boundary or a second cycle for memory access.
+
+Every optimization should be checked with the unchanged 95-test functional testbench and then measured again using the same device, clock constraint and implementation settings. This makes the frequency gain attributable to the hardware change rather than to a different test or constraint.
