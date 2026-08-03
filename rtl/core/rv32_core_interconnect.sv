@@ -1,6 +1,6 @@
 module rv32_core_interconnect #(
     parameter logic [31:0] RESET_VECTOR = 32'h00000000,
-    parameter DATA_MEMORY_DEPTH_WORDS = 1024
+    parameter DATA_MEMORY_DEPTH_WORDS = 256
 ) (
     input logic clk,
     input logic resetn,

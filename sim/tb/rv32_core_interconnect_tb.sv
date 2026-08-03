@@ -228,14 +228,14 @@ module rv32_core_interconnect_tb;
             if (immediate_type !== expected_value) begin
                 failure_count = failure_count + 1;
                 $display(
-                    "FAIL: %s expected=%0d actual=%0d",
+                    "FAIL: %s expected=%s actual=%s",
                     test_name,
-                    expected_value,
-                    immediate_type
+                    expected_value.name(),
+                    immediate_type.name()
                 );
             end
             else begin
-                $display("PASS: %s value=%0d", test_name, immediate_type);
+                $display("PASS: %s value=%s", test_name, immediate_type.name());
             end
         end
     endtask
@@ -467,7 +467,7 @@ module rv32_core_interconnect_tb;
             );
         end
         else begin
-            $display("PASS: ECALL special operation value=%0d", special_operation);
+            $display("PASS: ECALL special operation value=0d", special_operation.name());
         end
         check_1("ECALL is a supported instruction", illegal_instruction, 1'b0);
         check_1("ECALL does not write a register", register_write_enable, 1'b0);
