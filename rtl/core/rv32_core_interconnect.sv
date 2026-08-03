@@ -55,6 +55,7 @@ module rv32_core_interconnect #(
 
     logic [31:0] alu_lhs;
     logic [31:0] alu_rhs;
+    logic [31:0] memory_address_result; 
 
     rv32_decode_stage decode_stage (
         .instruction(instruction),
@@ -93,6 +94,13 @@ module rv32_core_interconnect #(
         .rd_address(rd_address),
         .rd_data(writeback_data)
     );
+    
+    (* keep_hierarchy = "yes" *) rv32_address_adder load_store_address_adder (
+    .base(rs1_data),
+    .offset(immediate),
+
+    .address(memory_address_result)
+    );
 
     always_comb begin // choose lhs value (rs1, pc, 0)
         case (alu_a_select)
@@ -121,7 +129,7 @@ module rv32_core_interconnect #(
         .DEPTH_WORDS(DATA_MEMORY_DEPTH_WORDS)
     ) memory_stage (
         .clk(clk),
-        .address(alu_result),
+        .address(memory_address_result),
         .store_data(rs2_data),
         .memory_read_enable(safe_memory_read_enable),
         .memory_write_enable(safe_memory_write_enable),
