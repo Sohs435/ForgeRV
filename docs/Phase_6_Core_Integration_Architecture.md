@@ -465,4 +465,476 @@ Phase 6 will be complete when:
 
 ## Current Phase 6 status
 
-The interfaces and block-level connection plan are now defined. The next implementation task is `rv32_instruction_memory.sv`, followed by the ALU operand muxes, writeback mux and complete `rv32_core.sv` integration.
+The Phase 6 datapath interconnect has now been implemented as:
+
+```text
+rtl/core/rv32_core_interconnect.sv
+```
+
+It compiles, elaborates and passes all 95 checks in the integrated self-checking testbench. The interconnect milestone is therefore complete. Instruction-memory integration and compiled-program execution remain before the complete Phase 6 processor can be marked finished under the original completion criteria.
+
+## Implemented `rv32_core_interconnect`
+
+The implemented module connects the verified Phase 1–5 sub-top modules while accepting the current instruction as an external input. Keeping `instruction` external allows the integrated datapath to be verified before instruction memory is added.
+
+```mermaid
+flowchart TD
+    I["External instruction"] --> D["Decode stage"]
+    D --> R["Register file"]
+    D --> M["Operand muxes"]
+    R --> M
+    M --> A["ALU"]
+    A --> MEM["Memory stage"]
+    R --> CF["Control flow"]
+    A --> CF
+    A --> WB["Writeback mux"]
+    MEM --> WB
+    CF --> WB
+    WB --> R
+```
+
+The module contains no additional architectural storage. The clocked state remains inside:
+
+- `rv32_regfile`, which stores the 32 integer registers.
+- `rv32_control_flow`, which stores the PC.
+- `rv32_memory_stage`, which contains the data-memory array.
+
+The operand muxes, writeback mux and safety equations are combinational glue logic.
+
+## Interconnect external interface
+
+### Inputs
+
+| Signal | Width | Purpose |
+| --- | ---: | --- |
+| `clk` | 1 | Clocks the register file, PC and data-memory writes |
+| `resetn` | 1 | Active-low reset for core state and safety gating |
+| `core_enable` | 1 | Allows the processor to run or holds its clocked state |
+| `instruction` | 32 | Current instruction supplied to the decode stage |
+
+### Datapath and PC outputs
+
+| Signal | Width | Purpose |
+| --- | ---: | --- |
+| `pc` | 32 | Current program-counter value |
+| `next_pc` | 32 | Combinational value proposed for the next PC update |
+| `pc_plus_4` | 32 | Sequential PC value and link value for `JAL`/`JALR` |
+| `alu_result` | 32 | Arithmetic result, effective address or control-transfer target |
+| `load_data` | 32 | Sign- or zero-extended result from the memory stage |
+| `writeback_data` | 32 | Final value supplied to the register-file write port |
+
+### Control and status outputs
+
+| Signal | Width | Purpose |
+| --- | ---: | --- |
+| `register_write_enable` | 1 | Final safe write enable supplied to the register file |
+| `branch_taken` | 1 | Result of the selected branch comparison |
+| `control_transfer_taken` | 1 | Indicates a taken branch, `JAL` or `JALR` |
+| `illegal_instruction` | 1 | Indicates an unsupported opcode or function encoding |
+| `instruction_address_misaligned` | 1 | Indicates a taken target that is not four-byte aligned |
+| `memory_access_misaligned` | 1 | Indicates an invalid halfword or word data address |
+| `core_fault` | 1 | Combined illegal-instruction or alignment-fault indication |
+| `immediate_type` | 3 | Exposes the selected immediate format for verification |
+| `special_operation` | 2 | Exposes `FENCE`, `ECALL` or `EBREAK` decoding |
+
+## Sub-top connections
+
+### Decode stage
+
+`rv32_decode_stage` receives the complete 32-bit instruction. It produces the three register addresses, reconstructed immediate, ALU controls, branch and jump controls, memory controls, writeback selection and status outputs.
+
+The address outputs connect directly to `rv32_regfile`:
+
+```text
+rs1_address → register_file.rs1_address
+rs2_address → register_file.rs2_address
+rd_address  → register_file.rd_address
+```
+
+### Register file
+
+The register file exposes two simultaneous combinational read values:
+
+```text
+rs1_data → ALU left-input mux and control-flow branch comparator
+rs2_data → ALU right-input mux, branch comparator and memory store data
+```
+
+Its single clocked write port receives:
+
+```text
+rd_write_enable = register_write_enable
+rd_address      = decoded rd_address
+rd_data         = writeback_data
+```
+
+### ALU
+
+The ALU receives the selected `alu_lhs`, selected `alu_rhs` and decoded `alu_operation`. Its result fans out to three independent destinations:
+
+```text
+alu_result → writeback mux
+alu_result → memory-stage effective address
+alu_result → control-flow branch or jump target
+```
+
+Only the instruction's decoded controls determine which destination is active.
+
+### Memory stage
+
+The memory-stage address comes from `alu_result`, while store data always comes from `rs2_data`. A load returns `load_data` to the writeback mux. A misaligned access asserts `memory_access_misaligned` and the load/store unit internally suppresses the request or write strobe.
+
+### Control flow
+
+The control-flow block receives the two register operands for branch comparisons and `alu_result` for the calculated target. It supplies `pc`, `next_pc`, `pc_plus_4`, the branch result and instruction-address alignment status.
+
+## ALU operand-selection equations
+
+### Left operand
+
+```systemverilog
+case (alu_a_select)
+    ALU_A_RS1: alu_lhs = rs1_data;
+    ALU_A_PC: alu_lhs = pc;
+    ALU_A_ZERO: alu_lhs = 32'b0;
+    default: alu_lhs = 32'b0;
+endcase
+```
+
+The value on the left of each assignment is `alu_lhs`, the first ALU operand. The value on the right is the independent source selected by `alu_a_select`:
+
+- `alu_lhs = rs1_data` supplies the first register operand for register arithmetic, immediate arithmetic, loads, stores and `JALR`.
+- `alu_lhs = pc` supplies the current instruction address for `AUIPC`, branch-target and `JAL` calculations.
+- `alu_lhs = 32'b0` provides zero for `LUI`, where only the generated upper immediate is required.
+- The default also supplies zero so an invalid selector cannot propagate an unknown operand into the ALU.
+
+### Right operand
+
+```systemverilog
+case (alu_b_select)
+    ALU_B_RS2: alu_rhs = rs2_data;
+    ALU_B_IMMEDIATE: alu_rhs = immediate;
+    default: alu_rhs = 32'b0;
+endcase
+```
+
+The value on the left is `alu_rhs`, the second ALU operand. The right side is selected independently from either the second register port or the generated immediate:
+
+- `alu_rhs = rs2_data` is used by register-register ALU instructions.
+- `alu_rhs = immediate` is used by immediate arithmetic, load/store address calculations and control-transfer targets.
+- The default drives zero for safe deterministic behaviour.
+
+Together, `alu_a_select` and `alu_b_select` allow the same ALU to serve arithmetic, address generation and control-flow calculations without duplicating adders.
+
+## Writeback-selection equations
+
+```systemverilog
+case (writeback_select)
+    WB_ALU: writeback_data = alu_result;
+    WB_MEMORY: writeback_data = load_data;
+    WB_PC_PLUS_4: writeback_data = pc_plus_4;
+    default: writeback_data = 32'b0;
+endcase
+```
+
+`writeback_data` is the value on the left and is connected to `rv32_regfile.rd_data`. Each independent value on the right represents one possible producer:
+
+- `alu_result` returns arithmetic, logical, `LUI` or `AUIPC` results.
+- `load_data` returns data read and extended by the memory stage.
+- `pc_plus_4` returns the link address for `JAL` and `JALR`.
+- Zero is selected for branches, stores, invalid selectors and operations that do not write `rd`.
+
+The writeback value alone cannot modify a register. A rising clock edge and an asserted final `register_write_enable` are also required.
+
+## Safety-gating equations
+
+### Safe memory-read enable
+
+```systemverilog
+assign safe_memory_read_enable = resetn &&
+                                 core_enable &&
+                                 !illegal_instruction &&
+                                 memory_read_enable;
+```
+
+`safe_memory_read_enable` on the left is the only read enable presented to the memory stage. Every independent term on the right must be true because they are joined by AND operations:
+
+- `resetn` must be high, meaning reset is inactive.
+- `core_enable` must be high, meaning the core is allowed to execute.
+- `!illegal_instruction` must be high, meaning the decoder accepted the instruction.
+- `memory_read_enable` must be high, meaning the instruction is a supported load.
+
+If any term is false, no memory read request is generated.
+
+### Safe memory-write enable
+
+```systemverilog
+assign safe_memory_write_enable = resetn &&
+                                  core_enable &&
+                                  !illegal_instruction &&
+                                  memory_write_enable;
+```
+
+`safe_memory_write_enable` on the left is the only write enable presented to the memory stage. The right-side terms require the core to be out of reset, enabled, executing a legal instruction and decoding a valid store.
+
+Memory alignment is not fed back into this equation because `memory_access_misaligned` is produced inside the memory stage from the request and calculated address. The load/store unit independently suppresses its request and clears its write strobe when it detects misalignment, avoiding a combinational feedback loop.
+
+### Combined fault indication
+
+```systemverilog
+assign core_fault = illegal_instruction ||
+                    instruction_address_misaligned ||
+                    memory_access_misaligned;
+```
+
+`core_fault` on the left represents the combined current-instruction failure state. The right side uses OR operations, so any one independent fault is sufficient:
+
+- `illegal_instruction` detects an invalid opcode, `funct3` or `funct7` combination.
+- `instruction_address_misaligned` detects an invalid taken branch or jump target.
+- `memory_access_misaligned` detects an invalid halfword or word data address.
+
+### Safe register-write enable
+
+```systemverilog
+assign register_write_enable = resetn &&
+                               core_enable &&
+                               decoded_register_write_enable &&
+                               !core_fault;
+```
+
+`register_write_enable` on the left is connected to the register-file write port. All independent conditions on the right must be true:
+
+- Reset must be inactive.
+- The core must be enabled.
+- The decoder must identify an instruction that normally writes `rd`.
+- No illegal-instruction or alignment fault may be active.
+
+This prevents a faulting load, jump or invalid instruction from corrupting a destination register.
+
+### Safe PC enable
+
+```systemverilog
+assign safe_pc_enable = resetn &&
+                        core_enable &&
+                        !core_fault;
+```
+
+`safe_pc_enable` on the left controls whether the PC captures `next_pc`. On the right, reset must be inactive, the core must be enabled and the current instruction must not have raised a fault.
+
+When a fault occurs, the current implementation holds the PC on the faulting instruction. This is deliberate temporary behaviour because trap redirection and CSRs have not yet been implemented.
+
+## Elaborated integration result
+
+![Vivado elaborated design of rv32_core_interconnect](Images/rv32_core_interconnect_elaborated.png)
+
+*Figure 6.2 — Vivado elaboration of the complete Phase 6 interconnect. The diagram shows the decode stage, register file, operand muxes, ALU, memory stage, control-flow block, writeback mux and safety gates connected as one synthesizable hierarchy.*
+
+The elaborated design confirms that:
+
+- Each verified sub-top remains a separate instantiated block.
+- The two operand-selection `case` statements synthesize into ALU input multiplexers.
+- The writeback-selection `case` statement synthesizes into a three-source result multiplexer.
+- The safe enables synthesize into small AND/NOT networks.
+- `core_fault` synthesizes into OR logic combining the three fault sources.
+- No accidental extra architectural register was added by the interconnect.
+
+## Core-level testbench design
+
+File:
+
+```text
+sim/tb/rv32_core_interconnect_tb.sv
+```
+
+The testbench drives encoded RV32I instructions directly into the external `instruction` input. This tests the integrated datapath independently of instruction memory.
+
+### Instruction-encoding functions
+
+The testbench contains separate functions for R, I, S, B, U and J encodings. Each function places register addresses, function fields and immediate fragments into their correct instruction positions. This avoids manually calculating a new hexadecimal instruction for every test.
+
+### Instruction timing tasks
+
+`drive_instruction` waits for a falling edge before changing `instruction`. This gives the combinational decode, register read, ALU, memory and writeback path half a cycle to settle before the next rising edge.
+
+`commit_instruction` waits for the following rising edge and then delays by one nanosecond. The clocked register file, PC or data memory can therefore update before the testbench checks the result.
+
+### Self-checking tasks
+
+- `check_32` compares 32-bit values such as PC, ALU results, loaded data and register contents.
+- `check_1` compares single-bit enables, branch decisions and fault flags.
+- `check_immediate_type` verifies that the decode stage selected the expected immediate format.
+- `test_count` records every comparison.
+- `failure_count` records mismatches and must remain zero.
+
+The testbench uses case-inequality comparisons (`!==`) so an unknown `X` or high-impedance `Z` value fails instead of accidentally being treated as correct.
+
+## Verification coverage
+
+| Area | Verified behaviour |
+| --- | --- |
+| Reset | Reset vector loaded and register writes suppressed |
+| ALU-left mux | `rs1_data`, `pc` and zero selections |
+| ALU-right mux | `rs2_data` and immediate selections |
+| ALU writeback | `LUI`, `ADDI`, `ADD`, `SUB` and `AUIPC` results |
+| Register file | Clocked commits and later use of written values |
+| Store path | Effective address and aligned `SW` operation |
+| Load path | `LW`, `LBU`, `LB`, zero extension and sign extension |
+| Load-to-ALU path | A loaded value reused by a following arithmetic instruction |
+| Branch control | Taken `BEQ` and untaken `BNE` |
+| Jump control | `JAL` target/link and `JALR` bit-zero clearing/link |
+| PC control | Sequential, branch, jump, disabled-core and fault hold behaviour |
+| Core enable | Register and PC state held while disabled and resumed when enabled |
+| Illegal instruction | Fault raised with register and PC updates suppressed |
+| Data alignment | Misaligned `LW` detected without changing its destination register |
+| Instruction alignment | Misaligned `JAL` detected without changing the PC |
+| Special decoding | `ECALL` decoded as `SPECIAL_ECALL` |
+| Reset priority | Active reset returns the PC to `RESET_VECTOR` |
+
+## Simulation result
+
+Vivado XSim compiled and elaborated the complete hierarchy, then executed all 95 self-checking comparisons with zero failures:
+
+```text
+PASS: reset vector value=00000100
+PASS: register write disabled during reset value=0
+PASS: LUI immediate type value=4
+PASS: LUI ALU result value=12345000
+PASS: LUI writeback selection value=12345000
+PASS: LUI register write enabled value=1
+PASS: LUI register commit value=12345000
+PASS: LUI sequential PC update value=00000104
+PASS: ADDI immediate type value=1
+PASS: ADDI ALU result value=12345005
+PASS: ADDI writeback selection value=12345005
+PASS: ADDI register commit value=12345005
+PASS: ADDI sequential PC update value=00000108
+PASS: ADD has no immediate value=0
+PASS: ADD ALU result value=2468a005
+PASS: ADD register commit value=2468a005
+PASS: SUB ALU result value=00000005
+PASS: SUB register commit value=00000005
+PASS: AUIPC ALU result value=00001110
+PASS: AUIPC writeback selection value=00001110
+PASS: AUIPC register commit value=00001110
+PASS: memory base register value=00000040
+PASS: store value construction value=80ff7f01
+PASS: store value register value=80ff7f01
+PASS: SW immediate type value=2
+PASS: SW effective address value=00000040
+PASS: aligned SW has no fault value=0
+PASS: SW does not write a register value=0
+PASS: LW effective address value=00000040
+PASS: LW load data value=80ff7f01
+PASS: LW writeback selection value=80ff7f01
+PASS: LW register write enabled value=1
+PASS: LW register commit value=80ff7f01
+PASS: LBU zero extension value=000000ff
+PASS: LBU register commit value=000000ff
+PASS: LB sign extension value=ffffff80
+PASS: LB register commit value=ffffff80
+PASS: loaded value used by ALU value=80ff7f06
+PASS: load-to-ALU register commit value=80ff7f06
+PASS: BEQ immediate type value=3
+PASS: BEQ branch taken value=1
+PASS: BEQ control transfer value=1
+PASS: BEQ target selection value=00000140
+PASS: BEQ PC update value=00000140
+PASS: BNE branch not taken value=0
+PASS: BNE no control transfer value=0
+PASS: BNE sequential next PC value=00000144
+PASS: BNE sequential PC update value=00000144
+PASS: JAL immediate type value=5
+PASS: JAL ALU target value=0000014c
+PASS: JAL link writeback value=00000148
+PASS: JAL next PC value=0000014c
+PASS: JAL control transfer value=1
+PASS: JAL link register commit value=00000148
+PASS: JAL PC update value=0000014c
+PASS: JALR raw ALU target value=00000149
+PASS: JALR cleared target bit zero value=00000148
+PASS: JALR link writeback value=00000150
+PASS: aligned JALR has no address fault value=0
+PASS: JALR link register commit value=00000150
+PASS: JALR PC update value=00000148
+PASS: core hold test register initialized value=00000001
+PASS: core disable suppresses register write value=0
+PASS: core disable holds next PC externally value=0000014c
+PASS: core disable holds PC value=0000014c
+PASS: core disable preserves register value=00000001
+PASS: core re-enable restores register write value=1
+PASS: core re-enable updates register value=00000007
+PASS: core re-enable updates PC value=00000150
+PASS: invalid opcode detected value=1
+PASS: invalid opcode raises core fault value=1
+PASS: invalid opcode suppresses register write value=0
+PASS: invalid opcode proposed next PC value=00000154
+PASS: invalid opcode holds PC value=00000150
+PASS: legal NOP clears illegal flag value=0
+PASS: legal NOP clears core fault value=0
+PASS: legal NOP advances PC value=00000154
+PASS: misaligned load destination initialized value=00000055
+PASS: misaligned LW effective address value=00000042
+PASS: misaligned LW detected value=1
+PASS: misaligned LW raises core fault value=1
+PASS: misaligned LW suppresses register write value=0
+PASS: misaligned LW holds PC value=00000158
+PASS: misaligned LW preserves destination value=00000055
+PASS: misaligned JAL target value=0000015a
+PASS: misaligned JAL detected value=1
+PASS: misaligned JAL raises core fault value=1
+PASS: misaligned JAL suppresses register write value=0
+PASS: misaligned JAL holds PC value=00000158
+PASS: ECALL special operation value=2
+PASS: ECALL is a supported instruction value=0
+PASS: ECALL does not write a register value=0
+PASS: ECALL sequential PC update value=0000015c
+PASS: reset suppresses register write value=0
+PASS: reset priority returns PC to vector value=00000100
+All 95 rv32_core_interconnect tests passed.
+$finish called at time : 296 ns
+```
+
+![Phase 6 core-interconnect waveform](Images/rv32_core_interconnect_waveform.png)
+
+*Figure 6.3 — Complete 296 ns self-checking simulation. The waveform shows sequential and redirected PC values, all three writeback paths, branch and jump pulses, temporary fault indications, immediate-type changes and a zero failure count.*
+
+### Waveform interpretation
+
+- From reset through the early ALU tests, `pc` advances in four-byte increments while `writeback_data` matches the expected ALU result.
+- During the memory tests, `load_data` changes to the stored word, zero-extended byte and sign-extended byte values.
+- `branch_taken` and `control_transfer_taken` pulse for the taken `BEQ` and jump instructions.
+- `pc` changes directly to the calculated targets for `BEQ`, `JAL` and `JALR`.
+- During `core_enable = 0`, the current PC and register state remain unchanged.
+- `illegal_instruction`, `memory_access_misaligned` and `instruction_address_misaligned` each cause `core_fault` to assert during their corresponding tests.
+- The PC remains held during each fault and resumes once a legal aligned instruction replaces the faulting input.
+- `failure_count` remains `32'b0` for the complete simulation.
+- The final reset returns `pc` to `32'h00000100`.
+
+## Vivado timescale warnings
+
+XSim reported warnings because the testbench declares:
+
+```systemverilog
+`timescale 1ns / 1ps
+```
+
+while the synthesizable RTL files do not declare a timescale. These warnings do not indicate a functional problem. XSim selected a one-picosecond simulation resolution, compiled every module and completed all tests successfully.
+
+The warnings can be removed later by adding a common timescale directive to the RTL sources or by using project-level time-unit settings. They have no effect on synthesized hardware.
+
+## Updated completion state
+
+| Phase 6 item | State |
+| --- | --- |
+| Interface and connection architecture | Complete |
+| ALU operand muxes | Implemented and verified |
+| Writeback mux | Implemented and verified |
+| Safe memory, register and PC gating | Implemented and verified |
+| Phase 1–5 sub-top interconnection | Implemented and verified |
+| `rv32_core_interconnect` elaboration | Successful |
+| Integrated self-checking testbench | 95 of 95 checks passed |
+| Instruction memory | Not yet integrated |
+| Final `rv32_core` wrapper | Not yet implemented |
+| Compiled assembly-program execution | Not yet tested |
+
+The verified interconnect now provides the complete execution datapath required by the final core. The next task is to connect instruction memory to `pc` and `instruction`, place the interconnect inside the final `rv32_core` wrapper and run a compiled assembly program without testbench-driven instruction injection.
