@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1000" viewBox="0 0 1800 1000">
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#2563eb"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#7c3aed"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#059669"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#d97706"/></marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/></marker>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#0891b2"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#64748b"/></marker>
+    <style>
+      .title { font: 700 24px Arial, sans-serif; fill: #0f172a; }
+      .block-title { font: 700 17px Arial, sans-serif; }
+      .block-text { font: 14px Arial, sans-serif; }
+      .label { font: 13px Arial, sans-serif; fill: #0f172a; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+      .bus { fill: none; stroke-width: 3; }
+      .control { fill: none; stroke-width: 2; stroke-dasharray: 7 5; }
+    </style>
+  </defs>
+
+  <rect x="45" y="40" width="1710" height="910" rx="18" fill="#f8fafc" stroke="#334155" stroke-width="3"/>
+  <text x="80" y="82" class="title">ForgeRV Phase 6 — Single-Cycle Core Integration</text>
+
+  <!-- Main buses are drawn behind the blocks. -->
+  <path d="M390 240 H460" class="bus" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+  <text x="407" y="226" class="label">pc[31:0]</text>
+
+  <path d="M710 190 H780" class="bus" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="715" y="177" class="label">instruction[31:0]</text>
+
+  <path d="M905 280 V430" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="915" y="355" class="label">register addresses</text>
+
+  <path d="M1030 230 H1110 V420" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="1045" y="292" class="label">immediate and selects</text>
+
+  <path d="M900 505 H1000" class="bus" stroke="#059669" marker-end="url(#arrow-green)"/>
+  <text x="905" y="491" class="label">rs1_data, rs2_data</text>
+
+  <path d="M1220 495 H1300" class="bus" stroke="#d97706" marker-end="url(#arrow-orange)"/>
+  <text x="1225" y="480" class="label">lhs, rhs</text>
+
+  <path d="M1030 200 H1260 V450 H1300" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="1110" y="188" class="label">alu_operation</text>
+
+  <path d="M1405 570 V690" class="bus" stroke="#dc2626" marker-end="url(#arrow-red)"/>
+  <text x="1418" y="630" class="label">effective address</text>
+
+  <path d="M900 560 H930 V800 H1430" class="bus" stroke="#059669" marker-end="url(#arrow-green)"/>
+  <text x="945" y="786" class="label">rs2_data store value</text>
+
+  <path d="M1030 250 H1330 V735 H1430" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="1180" y="720" class="label">memory controls</text>
+
+  <path d="M1300 535 H1270 V750 H1250" class="bus" stroke="#dc2626" marker-end="url(#arrow-red)"/>
+  <text x="1190" y="670" class="label">alu_result</text>
+
+  <path d="M1430 760 H1250" class="bus" stroke="#0891b2" marker-end="url(#arrow-cyan)"/>
+  <text x="1300" y="745" class="label">load_data</text>
+
+  <path d="M250 340 V875 H1085 V860" class="bus" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+  <text x="475" y="892" class="label">pc_plus_4</text>
+
+  <path d="M1030 265 H1070 V720" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="1080" y="690" class="label">writeback_select</text>
+
+  <path d="M1030 170 H960 V470 H900" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="930" y="400" class="label">rd control</text>
+
+  <path d="M1030 790 H940 V590 H900" class="bus" stroke="#d97706" marker-end="url(#arrow-orange)"/>
+  <text x="945" y="615" class="label">rd_data</text>
+
+  <path d="M650 520 H430 V315 H390" class="bus" stroke="#059669" marker-end="url(#arrow-green)"/>
+  <text x="440" y="505" class="label">branch operands</text>
+
+  <path d="M1300 470 H1240 V365 H360 V340" class="bus" stroke="#dc2626" marker-end="url(#arrow-red)"/>
+  <text x="720" y="352" class="label">alu_result branch or jump target</text>
+
+  <path d="M780 130 V98 H420 V200 H390" class="control" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  <text x="470" y="110" class="label">branch_operation and jump_operation</text>
+
+  <path d="M280 340 V390 H1090 V420" class="bus" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+  <text x="560" y="378" class="label">pc to ALU operand mux</text>
+
+  <path d="M100 450 H130" class="bus" stroke="#64748b" marker-end="url(#arrow-gray)"/>
+  <path d="M100 470 H600 V470 H650" class="bus" stroke="#64748b" marker-end="url(#arrow-gray)"/>
+  <path d="M100 490 H1360 V720 H1430" class="bus" stroke="#64748b" marker-end="url(#arrow-gray)"/>
+
+  <path d="M780 255 H540 V700 H390" class="control" stroke="#64748b" marker-end="url(#arrow-gray)"/>
+  <path d="M130 300 H115 V730 H150" class="control" stroke="#64748b" marker-end="url(#arrow-gray)"/>
+  <path d="M1430 830 H420 V770 H390" class="control" stroke="#64748b" marker-end="url(#arrow-gray)"/>
+
+  <!-- Collapsed sub-top blocks. -->
+  <rect x="130" y="190" width="260" height="150" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+  <text x="260" y="222" text-anchor="middle" class="block-title" fill="#172554">rv32_control_flow</text>
+  <text x="260" y="256" text-anchor="middle" class="block-text" fill="#172554">PC register</text>
+  <text x="260" y="280" text-anchor="middle" class="block-text" fill="#172554">Branch decision</text>
+  <text x="260" y="304" text-anchor="middle" class="block-text" fill="#172554">Next-PC selection</text>
+
+  <rect x="460" y="120" width="250" height="140" rx="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+  <text x="585" y="154" text-anchor="middle" class="block-title" fill="#3b0764">rv32_instruction_memory</text>
+  <text x="585" y="190" text-anchor="middle" class="block-text" fill="#3b0764">Planned Phase 6 block</text>
+  <text x="585" y="216" text-anchor="middle" class="block-text" fill="#3b0764">32-bit instruction read</text>
+
+  <rect x="780" y="110" width="250" height="170" rx="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+  <text x="905" y="144" text-anchor="middle" class="block-title" fill="#3b0764">rv32_decode_stage</text>
+  <text x="905" y="182" text-anchor="middle" class="block-text" fill="#3b0764">Register addresses</text>
+  <text x="905" y="208" text-anchor="middle" class="block-text" fill="#3b0764">Immediate</text>
+  <text x="905" y="234" text-anchor="middle" class="block-text" fill="#3b0764">Control signals</text>
+
+  <rect x="650" y="430" width="250" height="170" rx="14" fill="#d1fae5" stroke="#059669" stroke-width="3"/>
+  <text x="775" y="465" text-anchor="middle" class="block-title" fill="#064e3b">rv32_regfile</text>
+  <text x="775" y="505" text-anchor="middle" class="block-text" fill="#064e3b">32 × 32-bit registers</text>
+  <text x="775" y="531" text-anchor="middle" class="block-text" fill="#064e3b">Two reads, one write</text>
+  <text x="775" y="557" text-anchor="middle" class="block-text" fill="#064e3b">x0 hardwired to zero</text>
+
+  <rect x="1000" y="420" width="220" height="150" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+  <text x="1110" y="455" text-anchor="middle" class="block-title" fill="#78350f">ALU operand muxes</text>
+  <text x="1110" y="495" text-anchor="middle" class="block-text" fill="#78350f">lhs: rs1 / PC / zero</text>
+  <text x="1110" y="523" text-anchor="middle" class="block-text" fill="#78350f">rhs: rs2 / immediate</text>
+
+  <rect x="1300" y="420" width="210" height="150" rx="14" fill="#fee2e2" stroke="#dc2626" stroke-width="3"/>
+  <text x="1405" y="455" text-anchor="middle" class="block-title" fill="#7f1d1d">rv32_alu</text>
+  <text x="1405" y="495" text-anchor="middle" class="block-text" fill="#7f1d1d">Arithmetic and logic</text>
+  <text x="1405" y="523" text-anchor="middle" class="block-text" fill="#7f1d1d">Comparisons and shifts</text>
+
+  <rect x="1430" y="690" width="240" height="160" rx="14" fill="#cffafe" stroke="#0891b2" stroke-width="3"/>
+  <text x="1550" y="726" text-anchor="middle" class="block-title" fill="#164e63">rv32_memory_stage</text>
+  <text x="1550" y="764" text-anchor="middle" class="block-text" fill="#164e63">Load/store alignment</text>
+  <text x="1550" y="790" text-anchor="middle" class="block-text" fill="#164e63">Byte strobes</text>
+  <text x="1550" y="816" text-anchor="middle" class="block-text" fill="#164e63">Local data memory</text>
+
+  <rect x="1030" y="720" width="220" height="140" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+  <text x="1140" y="755" text-anchor="middle" class="block-title" fill="#78350f">Writeback mux</text>
+  <text x="1140" y="793" text-anchor="middle" class="block-text" fill="#78350f">ALU / load / PC + 4</text>
+  <text x="1140" y="819" text-anchor="middle" class="block-text" fill="#78350f">Selected by decoder</text>
+
+  <rect x="150" y="650" width="240" height="150" rx="14" fill="#f1f5f9" stroke="#64748b" stroke-width="3"/>
+  <text x="270" y="685" text-anchor="middle" class="block-title" fill="#0f172a">Core status</text>
+  <text x="270" y="720" text-anchor="middle" class="block-text" fill="#0f172a">Illegal instruction</text>
+  <text x="270" y="746" text-anchor="middle" class="block-text" fill="#0f172a">Instruction misaligned</text>
+  <text x="270" y="772" text-anchor="middle" class="block-text" fill="#0f172a">Memory misaligned</text>
+
+  <rect x="10" y="430" width="90" height="70" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="55" y="458" text-anchor="middle" class="block-title" fill="#0f172a">clk</text>
+  <text x="55" y="482" text-anchor="middle" class="block-text" fill="#0f172a">resetn</text>
+
+  <g transform="translate(1330,905)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#0f172a" stroke-width="3"/><text x="48" y="5" class="block-text">32-bit data bus</text>
+    <line x1="180" y1="0" x2="220" y2="0" stroke="#7c3aed" stroke-width="2" stroke-dasharray="7 5"/><text x="228" y="5" class="block-text">Control bus</text>
+  </g>
+</svg>
