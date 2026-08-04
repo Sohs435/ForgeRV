@@ -16,14 +16,19 @@ module rv32_load_store_unit (
     output logic memory_access_misaligned  
     );
     
-    import rv32_pkg::*; 
-    logic [31:0] shifted_read_data; 
+    import rv32_pkg::*;
+    
+    logic [7:0] selected_byte;
+    logic [15:0] selected_half;
+    
     assign memory_address = {address[31:2], 2'b00}; 
     
     always_comb begin 
         memory_access_misaligned = 1'b0; 
         memory_write_data = store_data;
-        memory_write_strobe = 4'b1111;
+        memory_write_strobe = 4'b0000;
+        selected_byte = 8'b0;
+        selected_half = 16'b0;
         
         if (memory_read_enable || memory_write_enable) begin 
             case (memory_size)
@@ -41,39 +46,68 @@ module rv32_load_store_unit (
             default: memory_write_data = 32'b0;
         endcase
         
-        case(memory_size) 
-            MEMORY_BYTE: memory_write_strobe = 4'b0001 << address[1:0]; //can be anything 
-            MEMORY_HALF: memory_write_strobe = 4'b0011 << address[1:0]; // can be only 00 -> 0000xxxx or 10 -> xxxx00000
-            MEMORY_WORD: memory_write_strobe = 4'b1111; // can only be 00 -> xxxxxxxx
+        case(memory_size)
+            MEMORY_BYTE: begin 
+                case(address[1:0])
+                    2'b00: memory_write_strobe = 4'b0001;
+                    2'b01: memory_write_strobe = 4'b0010;
+                    2'b10: memory_write_strobe = 4'b0100;
+                    2'b11: memory_write_strobe = 4'b1000;
+                    default: memory_write_strobe = 4'b0000;
+                endcase
+            end 
+            
+            MEMORY_HALF: begin 
+                case(address[1:0])
+                    2'b00: memory_write_strobe = 4'b0011;
+                    2'b10: memory_write_strobe = 4'b1100;
+                    default: memory_write_strobe = 4'b0000;
+                endcase
+            end 
+            
+            MEMORY_WORD: begin 
+                if (address[1:0] == 2'b00) memory_write_strobe = 4'b1111;
+                else memory_write_strobe = 4'b0000;
+            end 
+            
             default: memory_write_strobe = 4'b0000; 
         endcase 
         
-        if (!memory_write_enable || memory_access_misaligned) //disable strobe if write function is disabled or the 
-        // memory access is misaligned or the strobe value is bogus 
+        if (!memory_write_enable || memory_access_misaligned)
             memory_write_strobe = 4'b0000; 
         
         memory_read_request = memory_read_enable && (memory_size != MEMORY_NONE) && !memory_access_misaligned;
         memory_write_request = memory_write_enable && (memory_size != MEMORY_NONE) && !memory_access_misaligned; 
         
+        case(address[1:0])
+            2'b00: selected_byte = memory_read_data[7:0];
+            2'b01: selected_byte = memory_read_data[15:8];
+            2'b10: selected_byte = memory_read_data[23:16];
+            2'b11: selected_byte = memory_read_data[31:24];
+            default: selected_byte = 8'b0;
+        endcase
+        
+        if (address[1]) selected_half = memory_read_data[31:16];
+        else selected_half = memory_read_data[15:0];
+        
         load_data = 32'b0;
-        shifted_read_data = memory_read_data >> {address[1:0], 3'b000}; // 0 -> 00000
-        // 8-> 010000, 16 -> 10000, 24 -> 11000
         
         if (memory_read_request) begin 
             case(memory_size)
                 MEMORY_BYTE: begin
-                    if (load_unsigned) load_data = {24'b0, shifted_read_data[7:0]};
-                    else load_data = {{24{shifted_read_data[7]}}, shifted_read_data[7:0]};
+                    if (load_unsigned) load_data = {24'b0, selected_byte};
+                    else load_data = {{24{selected_byte[7]}}, selected_byte};
                 end 
+                
                 MEMORY_HALF: begin
-                    if (load_unsigned) load_data = {16'b0, shifted_read_data[15:0]};
-                    else load_data = {{16{shifted_read_data[15]}}, shifted_read_data[15:0]};
+                    if (load_unsigned) load_data = {16'b0, selected_half};
+                    else load_data = {{16{selected_half[15]}}, selected_half};
                 end 
-                MEMORY_WORD: load_data = shifted_read_data; 
+                
+                MEMORY_WORD: load_data = memory_read_data; 
                 default: load_data = 32'b0;
             endcase 
         end 
-
-        
     end 
-endmodule 
+    
+endmodule

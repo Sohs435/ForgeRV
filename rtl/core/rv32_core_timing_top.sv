@@ -1,6 +1,6 @@
 module rv32_core_timing_top #(
-    parameter logic [31:0] RESET_VECTOR = 32'h00000000,
-    parameter DATA_MEMORY_DEPTH_WORDS = 1024
+    parameter logic [31:0] RESET_VECTOR = 32'h00000100,
+    parameter DATA_MEMORY_DEPTH_WORDS = 256
 ) (
     input logic clk,
     input logic resetn,
@@ -75,14 +75,14 @@ module rv32_core_timing_top #(
     end
 
     assign debug_status = {
-        register_write_enable,
-        branch_taken,
-        control_transfer_taken,
-        illegal_instruction,
-        instruction_address_misaligned,
-        memory_access_misaligned,
+        core_enable,
         core_fault,
-        1'b0
+        memory_access_misaligned,
+        instruction_address_misaligned,
+        illegal_instruction,
+        control_transfer_taken,
+        branch_taken,
+        register_write_enable
     };
 
 endmodule

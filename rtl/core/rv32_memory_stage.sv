@@ -1,5 +1,5 @@
 module rv32_memory_stage #(
-    parameter DEPTH_WORDS = 1024
+    parameter DEPTH_WORDS = 256
 ) (
     input logic clk,
     input logic [31:0] address,
