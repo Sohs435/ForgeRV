@@ -467,7 +467,7 @@ module rv32_core_interconnect_tb;
             );
         end
         else begin
-            $display("PASS: ECALL special operation value=0d", special_operation.name());
+            $display("PASS: ECALL special operation value=%s", special_operation.name());
         end
         check_1("ECALL is a supported instruction", illegal_instruction, 1'b0);
         check_1("ECALL does not write a register", register_write_enable, 1'b0);
