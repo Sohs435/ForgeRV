@@ -1,0 +1,179 @@
+<mxfile host="app.diagrams.net" modified="2026-08-05T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="phase8-pipeline" name="Phase 8 - Five Stage Pipeline">
+    <mxGraphModel dx="2600" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2800" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="ForgeRV Phase 8 — Five-Stage Pipelined Core" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="760" y="20" width="1200" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="if_lane" value="IF — Instruction Fetch" style="swimlane;html=1;startSize=34;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;opacity=35" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="600" height="650" as="geometry"/>
+        </mxCell>
+        <mxCell id="id_lane" value="ID — Decode and Register Read" style="swimlane;html=1;startSize=34;rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;opacity=35" vertex="1" parent="1">
+          <mxGeometry x="660" y="90" width="480" height="650" as="geometry"/>
+        </mxCell>
+        <mxCell id="ex_lane" value="EX — Execute and Control Transfer" style="swimlane;html=1;startSize=34;rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;opacity=35" vertex="1" parent="1">
+          <mxGeometry x="1160" y="90" width="580" height="650" as="geometry"/>
+        </mxCell>
+        <mxCell id="mem_lane" value="MEM — Data Memory" style="swimlane;html=1;startSize=34;rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;opacity=35" vertex="1" parent="1">
+          <mxGeometry x="1760" y="90" width="450" height="650" as="geometry"/>
+        </mxCell>
+        <mxCell id="wb_lane" value="WB — Register Writeback" style="swimlane;html=1;startSize=34;rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;opacity=35" vertex="1" parent="1">
+          <mxGeometry x="2230" y="90" width="350" height="650" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pc" value="&lt;b&gt;PC Register&lt;/b&gt;&lt;br&gt;pc[31:0]&lt;br&gt;enable&lt;br&gt;redirect target" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="180" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="imem" value="&lt;b&gt;Instruction Memory / Interface&lt;/b&gt;&lt;br&gt;address = pc&lt;br&gt;instruction[31:0]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="320" y="170" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="pc4" value="&lt;b&gt;PC + 4&lt;/b&gt;&lt;br&gt;pc_plus_4[31:0]" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="350" y="350" width="160" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="pc_mux" value="&lt;b&gt;Next-PC Mux&lt;/b&gt;&lt;br&gt;sequential / redirect" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#dae8fc;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="80" y="430" width="180" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ifid" value="&lt;b&gt;IF/ID&lt;/b&gt;&lt;br&gt;&lt;br&gt;valid&lt;br&gt;pc&lt;br&gt;pc_plus_4&lt;br&gt;instruction&lt;br&gt;&lt;br&gt;enable&lt;br&gt;flush" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="570" y="140" width="90" height="540" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="decoder" value="&lt;b&gt;Decode Stage&lt;/b&gt;&lt;br&gt;decoder + immediate generator&lt;br&gt;control signals&lt;br&gt;rs1 / rs2 / rd addresses" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="710" y="160" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="regfile" value="&lt;b&gt;Register File&lt;/b&gt;&lt;br&gt;2 asynchronous reads&lt;br&gt;1 clocked write&lt;br&gt;rs1_data[31:0]&lt;br&gt;rs2_data[31:0]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="710" y="350" width="260" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="id_rs_fields" value="rs1/rs2 usage&lt;br&gt;and destination metadata" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="750" y="550" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="idex" value="&lt;b&gt;ID/EX&lt;/b&gt;&lt;br&gt;&lt;br&gt;valid&lt;br&gt;pc / pc_plus_4&lt;br&gt;rs1 / rs2 / rd&lt;br&gt;rs1_data / rs2_data&lt;br&gt;immediate&lt;br&gt;ALU controls&lt;br&gt;branch/jump controls&lt;br&gt;memory controls&lt;br&gt;writeback controls&lt;br&gt;&lt;br&gt;enable&lt;br&gt;flush / bubble" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="1070" y="120" width="110" height="590" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="forward_a" value="&lt;b&gt;Forward Mux A&lt;/b&gt;&lt;br&gt;ID/EX rs1&lt;br&gt;EX/MEM result&lt;br&gt;MEM/WB result" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1220" y="160" width="190" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="forward_b" value="&lt;b&gt;Forward Mux B&lt;/b&gt;&lt;br&gt;ID/EX rs2&lt;br&gt;EX/MEM result&lt;br&gt;MEM/WB result" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1220" y="300" width="190" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="alu" value="&lt;b&gt;RV32 ALU&lt;/b&gt;&lt;br&gt;arithmetic&lt;br&gt;logic&lt;br&gt;comparisons&lt;br&gt;shifts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1470" y="190" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="branch" value="&lt;b&gt;Branch / Jump Unit&lt;/b&gt;&lt;br&gt;compare operands&lt;br&gt;branch_taken&lt;br&gt;redirect target&lt;br&gt;misalignment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1470" y="370" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="addr_adder" value="&lt;b&gt;Memory Address Adder&lt;/b&gt;&lt;br&gt;forwarded rs1 + immediate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1470" y="550" width="200" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="exmem" value="&lt;b&gt;EX/MEM&lt;/b&gt;&lt;br&gt;&lt;br&gt;valid&lt;br&gt;ALU result&lt;br&gt;memory address&lt;br&gt;forwarded store data&lt;br&gt;rd address&lt;br&gt;pc_plus_4&lt;br&gt;memory controls&lt;br&gt;writeback controls&lt;br&gt;&lt;br&gt;enable&lt;br&gt;flush" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="1690" y="120" width="110" height="590" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lsu" value="&lt;b&gt;Load/Store Unit&lt;/b&gt;&lt;br&gt;alignment checks&lt;br&gt;write strobes&lt;br&gt;byte/half selection&lt;br&gt;sign/zero extension" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="1840" y="190" width="250" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="dmem" value="&lt;b&gt;Data Memory&lt;/b&gt;&lt;br&gt;256 × 32-bit LUTRAM&lt;br&gt;read data&lt;br&gt;byte write enables" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="1840" y="410" width="250" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="mem_result" value="load_data / ALU result / pc_plus_4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="1870" y="590" width="190" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="memwb" value="&lt;b&gt;MEM/WB&lt;/b&gt;&lt;br&gt;&lt;br&gt;valid&lt;br&gt;load_data&lt;br&gt;ALU result&lt;br&gt;pc_plus_4&lt;br&gt;rd address&lt;br&gt;writeback select&lt;br&gt;register write enable&lt;br&gt;&lt;br&gt;enable&lt;br&gt;flush" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="2160" y="120" width="110" height="590" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="wbmux" value="&lt;b&gt;Writeback Mux&lt;/b&gt;&lt;br&gt;ALU result&lt;br&gt;load data&lt;br&gt;PC + 4" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e1d5e7;strokeColor=#9673a6" vertex="1" parent="1">
+          <mxGeometry x="2340" y="260" width="190" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="commit" value="&lt;b&gt;Register Commit&lt;/b&gt;&lt;br&gt;rd_write_enable&lt;br&gt;rd_address&lt;br&gt;writeback_data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6" vertex="1" parent="1">
+          <mxGeometry x="2340" y="460" width="190" height="110" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="hazard" value="&lt;b&gt;Hazard Unit&lt;/b&gt;&lt;br&gt;detect load-use dependency&lt;br&gt;hold PC and IF/ID&lt;br&gt;insert ID/EX bubble" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="650" y="850" width="300" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="forward_unit" value="&lt;b&gt;Forwarding Unit&lt;/b&gt;&lt;br&gt;compare ID/EX rs1/rs2&lt;br&gt;against EX/MEM and MEM/WB rd&lt;br&gt;select newest valid result" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1250" y="850" width="340" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="pipe_control" value="&lt;b&gt;Pipeline Control&lt;/b&gt;&lt;br&gt;priority: reset → redirect/fault flush → load-use stall → advance&lt;br&gt;drives enable, flush and valid state" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="950" y="1090" width="520" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="clock" value="clk / resetn" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666" vertex="1" parent="1">
+          <mxGeometry x="1650" y="1095" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend" value="&lt;b&gt;Legend&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#006600&quot;&gt;solid green: instruction/data path&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#0000cc&quot;&gt;dashed blue: forwarding&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#cc6600&quot;&gt;dashed orange: stall/flush control&lt;/font&gt;&lt;br&gt;orange blocks: clocked pipeline registers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999" vertex="1" parent="1">
+          <mxGeometry x="1980" y="850" width="360" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_pc_imem" value="pc[31:0]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pc" target="imem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_pc_pc4" value="pc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pc" target="pc4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_pc_mux" value="pc + 4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pc4" target="pc_mux"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_mux_pc" value="next_pc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pc_mux" target="pc"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="50" y="475"/><mxPoint x="50" y="275"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_imem_ifid" value="instruction[31:0]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="imem" target="ifid"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_pc4_ifid" value="pc, pc_plus_4, valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pc4" target="ifid"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="e_ifid_dec" value="instruction + PC" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="ifid" target="decoder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_dec_rf" value="rs1/rs2 addresses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="decoder" target="regfile"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_dec_idex" value="immediate + controls + addresses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="decoder" target="idex"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_rf_idex" value="rs1_data + rs2_data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="regfile" target="idex"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_meta_idex" value="source-use metadata" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="id_rs_fields" target="idex"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="e_idex_fa" value="rs1 operand" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="idex" target="forward_a"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_idex_fb" value="rs2 operand" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="idex" target="forward_b"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fa_alu" value="ALU lhs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_a" target="alu"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fb_alu" value="ALU rhs / immediate mux" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_b" target="alu"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fa_branch" value="forwarded operands" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_a" target="branch"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fb_branch" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_b" target="branch"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fa_addr" value="forwarded rs1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_a" target="addr_adder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_idex_addr" value="immediate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="idex" target="addr_adder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_alu_exmem" value="ALU result + controls" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="alu" target="exmem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_addr_exmem" value="memory address" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="addr_adder" target="exmem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fb_exmem" value="store data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_b" target="exmem"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="e_exmem_lsu" value="address + store data + memory controls" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="exmem" target="lsu"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_lsu_dmem" value="aligned address + write data + strobes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="lsu" target="dmem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_dmem_lsu" value="memory_read_data[31:0]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="dmem" target="lsu"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2130" y="475"/><mxPoint x="2130" y="300"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_lsu_result" value="load_data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="lsu" target="mem_result"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_exmem_result" value="ALU result + pc_plus_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="exmem" target="mem_result"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_result_memwb" value="results + rd + WB controls" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="mem_result" target="memwb"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_memwb_wb" value="ALU / load / PC+4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="memwb" target="wbmux"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_wb_commit" value="writeback_data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="wbmux" target="commit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_commit_rf" value="rd address + data + enable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#009900;strokeWidth=2;endArrow=block" edge="1" parent="1" source="commit" target="regfile"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2430" y="780"/><mxPoint x="840" y="780"/></Array></mxGeometry></mxCell>
+
+        <mxCell id="e_branch_pcmux" value="taken + redirect target" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="branch" target="pc_mux"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1570" y="800"/><mxPoint x="180" y="800"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_branch_control" value="redirect / misalignment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="branch" target="pipe_control"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_ifid_hazard" value="ID source addresses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="ifid" target="hazard"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_idex_hazard" value="EX load + rd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="idex" target="hazard"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_hazard_control" value="stall / bubble" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="hazard" target="pipe_control"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_control_pc" value="pc_enable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pipe_control" target="pc"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1030" y="1250"/><mxPoint x="160" y="1250"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_control_ifid" value="enable / flush" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pipe_control" target="ifid"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_control_idex" value="enable / flush" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pipe_control" target="idex"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_control_exmem" value="enable / flush" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pipe_control" target="exmem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_control_memwb" value="enable / flush" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#cc6600;strokeWidth=2;endArrow=block" edge="1" parent="1" source="pipe_control" target="memwb"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="e_idex_fwdunit" value="rs1 / rs2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="idex" target="forward_unit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_exmem_fwdunit" value="rd + RegWrite" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="exmem" target="forward_unit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_memwb_fwdunit" value="rd + RegWrite" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="memwb" target="forward_unit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fwdunit_fa" value="forward_a_select" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_unit" target="forward_a"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_fwdunit_fb" value="forward_b_select" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="forward_unit" target="forward_b"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_exmem_fa" value="EX/MEM forward data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="exmem" target="forward_a"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1750" y="820"/><mxPoint x="1315" y="820"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_memwb_fb" value="MEM/WB writeback data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#0000cc;strokeWidth=2;endArrow=block" edge="1" parent="1" source="memwb" target="forward_b"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2215" y="1030"/><mxPoint x="1315" y="1030"/></Array></mxGeometry></mxCell>
+
+        <mxCell id="e_clock_control" value="clock and reset" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block" edge="1" parent="1" source="clock" target="pipe_control"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_clock_ifid" value="clk/resetn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block" edge="1" parent="1" source="clock" target="ifid"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1725" y="1320"/><mxPoint x="615" y="1320"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_clock_idex" value="clk/resetn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block" edge="1" parent="1" source="clock" target="idex"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1725" y="1280"/><mxPoint x="1125" y="1280"/></Array></mxGeometry></mxCell>
+        <mxCell id="e_clock_exmem" value="clk/resetn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block" edge="1" parent="1" source="clock" target="exmem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_clock_memwb" value="clk/resetn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block" edge="1" parent="1" source="clock" target="memwb"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

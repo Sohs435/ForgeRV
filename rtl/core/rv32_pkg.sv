@@ -90,4 +90,10 @@ package rv32_pkg;
         SPECIAL_EBREAK = 2'd3 // breakpoint exception 
     } special_op_t;
     
+    typedef enum logic [1:0] {
+        FORWARD_NONE = 2'd0,
+        FORWARD_MEM_WB = 2'd1,
+        FORWARD_EX_MEM = 2'd2
+    } forward_sel_t;
+    
 endpackage
