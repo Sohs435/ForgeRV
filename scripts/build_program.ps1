@@ -1,10 +1,11 @@
-param (
-    [string]$ToolchainPrefix = ""
-)
-
 $ErrorActionPreference = "Stop"
 
-$scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
+if ([string]::IsNullOrWhiteSpace($PSScriptRoot)) {
+    $scriptDirectory = (Get-Location).Path
+}
+else {
+    $scriptDirectory = $PSScriptRoot
+}
 
 $sourcePath = Join-Path $scriptDirectory "program.S"
 $linkerPath = Join-Path $scriptDirectory "linker.ld"
@@ -24,60 +25,79 @@ if (-not (Test-Path $linkerPath)) {
     throw "Cannot find $linkerPath"
 }
 
-if ($ToolchainPrefix -eq "") {
-    $candidatePrefixes = @(
-        "riscv-none-elf-",
-        "riscv64-unknown-elf-",
-        "riscv32-unknown-elf-"
-    )
-
-    foreach ($candidatePrefix in $candidatePrefixes) {
-        if (Get-Command "${candidatePrefix}gcc" -ErrorAction SilentlyContinue) {
-            $ToolchainPrefix = $candidatePrefix
-            break
-        }
-    }
+if (-not (Get-Command "wsl.exe" -ErrorAction SilentlyContinue)) {
+    throw "WSL is not installed"
 }
 
-if ($ToolchainPrefix -eq "") {
-    throw "GNU RISC-V compiler not found. Add its bin folder to PATH or pass -ToolchainPrefix."
-}
-
-$compiler = Get-Command "${ToolchainPrefix}gcc" -ErrorAction Stop
-$objectCopy = Get-Command "${ToolchainPrefix}objcopy" -ErrorAction Stop
-$objectDump = Get-Command "${ToolchainPrefix}objdump" -ErrorAction Stop
-
-Write-Host "Building program.S for ForgeRV with $ToolchainPrefix"
-
-& $compiler.Source `
-    -march=rv32i `
-    -mabi=ilp32 `
-    -mno-relax `
-    -nostdlib `
-    -nostartfiles `
-    -static `
-    "-Wl,-T,$linkerPath" `
-    -Wl,--no-relax `
-    -Wl,--build-id=none `
-    "-Wl,-Map,$mapPath" `
-    -o $elfPath `
-    $sourcePath
+& wsl.exe bash -lc "command -v riscv64-unknown-elf-gcc >/dev/null"
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Assembly or linking failed"
+    throw "The RISC-V compiler is not installed inside WSL"
 }
 
-& $objectCopy.Source -O binary -j .text $elfPath $binaryPath
+$wslDirectory = "/mnt/c/root_pqnq/RISC-V/streamcore-rv/scripts"
+
+$buildCommands = @"
+set -e
+
+cd '$wslDirectory'
+
+rm -f program.elf
+rm -f program.bin
+rm -f program.dump
+rm -f program.map
+
+riscv64-unknown-elf-gcc \
+    -march=rv32i \
+    -mabi=ilp32 \
+    -mno-relax \
+    -nostdlib \
+    -nostartfiles \
+    -static \
+    -Wl,-T,linker.ld \
+    -Wl,--no-relax \
+    -Wl,--build-id=none \
+    -Wl,-Map,program.map \
+    -o program.elf \
+    program.S
+
+riscv64-unknown-elf-objcopy \
+    -O binary \
+    -j .text \
+    program.elf \
+    program.bin
+
+riscv64-unknown-elf-objdump \
+    -d \
+    -M no-aliases,numeric \
+    program.elf \
+    > program.dump
+"@
+
+Write-Host ""
+Write-Host "Building program.S for ForgeRV through WSL"
+Write-Host "------------------------------------------------"
+
+& wsl.exe bash -lc $buildCommands
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Binary conversion failed"
+    throw "ForgeRV program build failed with exit code $LASTEXITCODE"
 }
 
-& $objectDump.Source -d -M no-aliases,numeric $elfPath |
-    Out-File -FilePath $dumpPath -Encoding ascii
+if (-not (Test-Path $elfPath)) {
+    throw "Build completed without generating program.elf"
+}
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Disassembly failed"
+if (-not (Test-Path $binaryPath)) {
+    throw "Build completed without generating program.bin"
+}
+
+if (-not (Test-Path $dumpPath)) {
+    throw "Build completed without generating program.dump"
+}
+
+if (-not (Test-Path $mapPath)) {
+    throw "Build completed without generating program.map"
 }
 
 $programSizeBytes = (Get-Item $binaryPath).Length
@@ -97,7 +117,9 @@ if ($programSizeBytes -gt $instructionMemorySizeBytes) {
 $instructionCount = $programSizeBytes / 4
 $remainingInstructions = $instructionMemoryDepthWords - $instructionCount
 
+Write-Host ""
 Write-Host "Build completed successfully"
+Write-Host "----------------------------"
 Write-Host "Instructions: $instructionCount / $instructionMemoryDepthWords"
 Write-Host "Program size: $programSizeBytes / $instructionMemorySizeBytes bytes"
 Write-Host "Unused instruction words: $remainingInstructions"

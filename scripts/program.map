@@ -1,0 +1,39 @@
+
+Discarded input sections
+
+ .data          0x0000000000000000        0x0 /tmp/cc5Ld5ZQ.o
+ .bss           0x0000000000000000        0x0 /tmp/cc5Ld5ZQ.o
+ .riscv.attributes
+                0x0000000000000000       0x1a /tmp/cc5Ld5ZQ.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+INSTRUCTION_MEMORY 0x0000000000000100 0x0000000000000400 xr
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+
+.text           0x0000000000000100      0x400
+                0x0000000000000100                . = ALIGN (0x4)
+ *(.text)
+ .text          0x0000000000000100      0x400 /tmp/cc5Ld5ZQ.o
+                0x0000000000000100                _start
+ *(.text.*)
+                0x0000000000000500                . = ALIGN (0x4)
+
+/DISCARD/
+ *(.data*)
+ *(.bss*)
+ *(.rodata*)
+ *(.sdata*)
+ *(.sbss*)
+ *(.eh_frame*)
+ *(.comment*)
+ *(.note*)
+ *(.riscv.attributes)
+                0x0000000000000001                ASSERT ((ADDR (.text) == ORIGIN (INSTRUCTION_MEMORY)), Program does not begin at the ForgeRV reset vector)
+                0x0000000000000001                ASSERT ((SIZEOF (.text) <= LENGTH (INSTRUCTION_MEMORY)), Program exceeds the 256-instruction memory)
+LOAD /tmp/cc5Ld5ZQ.o
+OUTPUT(program.elf elf32-littleriscv)

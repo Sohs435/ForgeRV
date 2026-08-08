@@ -6,10 +6,20 @@ from pynq import MMIO # Memory Mapped IO
 BITSTREAM_PATH = "/home/xilinx/ForgeRV/forgerv.bit"
 PROGRAM_PATH = "/home/xilinx/ForgeRV/programs/program.bin"
 
-INSTRUCTION_MEMORY_NAME = "instruction_bram_controller"
+# the previous loader attempt already programmed the FPGA
+# change this to True after restarting or powering off the PYNQ
+DOWNLOAD_BITSTREAM = False
+
+# physical address assigned to the instruction AXI BRAM Controller in the Vivado Address Editor
+INSTRUCTION_MEMORY_BASE_ADDRESS = 0x40000000
+INSTRUCTION_MEMORY_ADDRESS_RANGE = 0x1000 # Vivado assigned a 4 KiB address region
+
 INSTRUCTION_MEMORY_DEPTH_WORDS = 256 # 256 words means 256 instruction capacity
 INSTRUCTION_MEMORY_SIZE_BYTES = INSTRUCTION_MEMORY_DEPTH_WORDS * 4 # total memory used by instructions
 # = 32 bits * 256 = 8192 bits = 1024 bytes
+
+print("ForgeRV Program Loader", flush=True)
+print("----------------------", flush=True)
 
 if not Path(BITSTREAM_PATH).is_file():
     raise FileNotFoundError(
@@ -21,32 +31,7 @@ if not Path(PROGRAM_PATH).is_file():
         f"Program binary does not exist: {PROGRAM_PATH}"
     )
 
-overlay = Overlay(BITSTREAM_PATH) # programs fpga with forgerv.bit
-
-if INSTRUCTION_MEMORY_NAME not in overlay.ip_dict:
-    raise RuntimeError(
-        f"Could not find {INSTRUCTION_MEMORY_NAME} in the hardware handoff file. "
-        f"Available hardware: {list(overlay.ip_dict.keys())}"
-    )
-
-instruction_memory_information = overlay.ip_dict[
-    INSTRUCTION_MEMORY_NAME
-] # locate instruction memory
-
-if instruction_memory_information["addr_range"] < INSTRUCTION_MEMORY_SIZE_BYTES:
-    raise RuntimeError(
-        "Instruction memory address range is smaller than the configured "
-        "instruction memory capacity"
-    )
-
-instruction_memory = MMIO(
-    instruction_memory_information["phys_addr"],
-    instruction_memory_information["addr_range"]
-) # create memory access object -> represents the memory region assigned to instruction BRAM controller
-# we can now write to physical addresses and the AXI BRAM controller will translate that into a write into
-# memory
-
-program_data = Path(PROGRAM_PATH).read_bytes()  # reads machine code of all instructions in program.bin
+program_data = Path(PROGRAM_PATH).read_bytes() # reads machine code of all instructions in program.bin
 
 if len(program_data) == 0:
     raise RuntimeError("Program binary is empty") # no data in program.bin
@@ -62,13 +47,50 @@ if len(program_data) > INSTRUCTION_MEMORY_SIZE_BYTES:
         "Program is larger than the instruction memory"
     ) # cannot process a file that is greater than 1024 bytes given that 1024 is the maximum processible data
 
-print("ForgeRV Program Loader")
-print("----------------------")
-print(f"Bitstream: {BITSTREAM_PATH}")
-print(f"Program: {PROGRAM_PATH}")
-print(f"Program size: {len(program_data)} bytes")
-print(f"Instruction count: {len(program_data) // 4}")
-print("\nWriting instructions into instruction memory...")
+print(f"Bitstream: {BITSTREAM_PATH}", flush=True)
+print(f"Program: {PROGRAM_PATH}", flush=True)
+print(f"Program size: {len(program_data)} bytes", flush=True)
+print(f"Instruction count: {len(program_data) // 4}", flush=True)
+
+if DOWNLOAD_BITSTREAM:
+    print("\nProgramming FPGA with ForgeRV bitstream...", flush=True)
+
+    overlay = Overlay(
+        BITSTREAM_PATH,
+        download=True
+    ) # programs fpga with forgerv.bit
+
+    print("FPGA programming complete", flush=True)
+
+else:
+    print("\nSkipping FPGA programming because ForgeRV is already loaded", flush=True)
+
+    overlay = Overlay(
+        BITSTREAM_PATH,
+        download=False
+    ) # read the hardware handoff file without programming the FPGA again
+
+    print("ForgeRV hardware description loaded", flush=True)
+
+# create memory access object directly from the physical address assigned in Vivado
+# the instruction AXI BRAM Controller does not appear in overlay.ip_dict on this PYNQ image
+instruction_memory = MMIO(
+    INSTRUCTION_MEMORY_BASE_ADDRESS,
+    INSTRUCTION_MEMORY_ADDRESS_RANGE
+) # create memory access object -> represents the memory region assigned to instruction BRAM controller
+
+# we can now write to physical addresses and the AXI BRAM controller will translate that into a write into
+# memory
+
+print(
+    f"Instruction memory base address: 0x{INSTRUCTION_MEMORY_BASE_ADDRESS:08X}",
+    flush=True
+)
+print(
+    f"Instruction memory address range: {INSTRUCTION_MEMORY_ADDRESS_RANGE} bytes",
+    flush=True
+)
+print("\nWriting instructions into instruction memory...", flush=True)
 
 for byte_address in range(0, len(program_data), 4): # byte_address reaches at most 1020
     # the final instruction occupies byte addresses 1020 to 1023
@@ -86,8 +108,8 @@ for byte_address in range(0, len(program_data), 4): # byte_address reaches at mo
         instruction_word
     ) # write each instruction
 
-print("Instruction writing complete")
-print("\nReading instructions back for verification...")
+print("Instruction writing complete", flush=True)
+print("\nReading instructions back for verification...", flush=True)
 
 for byte_address in range(0, len(program_data), 4):
     expected_instruction = int.from_bytes(
@@ -106,8 +128,9 @@ for byte_address in range(0, len(program_data), 4):
             f"observed 0x{observed_instruction:08X}"
         )
 
-print("Instruction memory verification passed")
+print("Instruction memory verification passed", flush=True)
 print(
-    f"Loaded {len(program_data) // 4} instructions"
+    f"Loaded {len(program_data) // 4} instructions",
+    flush=True
 ) # total number of instructions
-print("Processor start control is not implemented by this loader yet")
+print("Processor start control is not implemented by this loader yet", flush=True)

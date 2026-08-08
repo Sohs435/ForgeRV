@@ -1,4 +1,4 @@
-create_clock -name core_clk -period 8.000 [get_ports clk]
+create_clock -name core_clk -period 20.000 [get_ports clk]
 
 set_input_delay -clock core_clk -min 0.000 \
     [get_ports {resetn core_enable instruction[*]}]
