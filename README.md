@@ -105,6 +105,5 @@ FPGA Config:
 XForge -> BRAM/TCM -> AXI bridge -> UART/Timer -> Accelerator interface
 ```
 
-## Initial Target
-
-A non-pipelined RV32I processor that executes programs from simulated memory and passes directed tests for every implemented instruction.
+## Progress
+Base Instruction Set 5 stage pipeline, RISC-v32 processor create with maximum clock frequency of 73 MHz. Further goals are limited to customising the instruction set of this processor. 
