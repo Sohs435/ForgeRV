@@ -1,18 +1,31 @@
 module rv32_pipeline_core #(
     parameter logic [31:0] RESET_VECTOR = 32'h00000100,
+    // PHASE 9 CHANGE: define the number of words available in the external instruction Block RAM.
+    parameter INSTRUCTION_MEMORY_DEPTH_WORDS = 256,
     parameter DATA_MEMORY_DEPTH_WORDS = 256
 ) (
     input logic clk,
     input logic resetn,
     input logic core_enable,
-    input logic [31:0] instruction,
+
+    // PHASE 9 CHANGE: the instruction now returns from synchronous external Block RAM.
+    input logic [31:0] instruction_memory_read_data,
+
+    // PHASE 9 CHANGE: these signals drive the processor-facing port of instruction Block RAM.
+    output logic instruction_memory_enable,
+    output logic [$clog2(INSTRUCTION_MEMORY_DEPTH_WORDS)-1:0] instruction_memory_address,
 
     output logic [31:0] pc,
     output logic [31:0] writeback_data,
     output logic register_write_enable,
     output logic pipeline_stalled,
     output logic control_transfer_taken,
-    output logic core_fault
+    output logic core_fault,
+    
+    output logic data_memory_write_commit,
+    output logic [31:0] data_memory_write_address,
+    output logic [31:0] data_memory_write_data,
+    output rv32_pkg::memory_size_t data_memory_write_size
 );
 
     import rv32_pkg::*;
@@ -20,6 +33,17 @@ module rv32_pipeline_core #(
     logic [31:0] fetch_next_pc;
     logic [31:0] fetch_pc_plus_4;
     logic fetch_pc_enable;
+
+    // PHASE 9 CHANGE: the request enable is separate from fetch_pc_enable to avoid a fault feedback loop.
+    logic fetch_request_enable;
+
+    // PHASE 9 CHANGE: these signals align a synchronous memory response with its original PC.
+    logic fetch_instruction_valid;
+    logic [31:0] fetch_instruction_pc;
+    logic [31:0] fetch_instruction_pc_plus_4;
+    logic [31:0] fetch_instruction;
+    logic fetch_instruction_address_misaligned;
+    logic fetch_instruction_address_out_of_range;
 
     logic if_id_enable;
     logic if_id_flush;
@@ -139,6 +163,11 @@ module rv32_pipeline_core #(
     logic mem_wb_memory_access_misaligned;
 
     logic fault_detected;
+    
+    assign data_memory_write_commit = memory_write_enable;
+    assign data_memory_write_address = ex_mem_memory_address;
+    assign data_memory_write_data = ex_mem_store_data;
+    assign data_memory_write_size = ex_mem_memory_size;
 
     assign fetch_pc_plus_4 = pc + 32'd4;
 
@@ -160,16 +189,44 @@ module rv32_pipeline_core #(
         .pc(pc)
     );
 
+    // PHASE 9 CHANGE: convert the byte-addressed PC into a Block RAM word address and retain its metadata.
+    rv32_instruction_fetch #(
+        .RESET_VECTOR(RESET_VECTOR),
+        .INSTRUCTION_MEMORY_DEPTH_WORDS(INSTRUCTION_MEMORY_DEPTH_WORDS)
+    ) instruction_fetch (
+        .clk(clk),
+        .resetn(resetn),
+        .fetch_enable(fetch_request_enable),
+        .flush(if_id_flush),
+
+        .pc(pc),
+        .pc_plus_4(fetch_pc_plus_4),
+
+        .instruction_memory_read_data(instruction_memory_read_data),
+
+        .instruction_memory_enable(instruction_memory_enable),
+        .instruction_memory_address(instruction_memory_address),
+
+        .valid_out(fetch_instruction_valid),
+        .pc_out(fetch_instruction_pc),
+        .pc_plus_4_out(fetch_instruction_pc_plus_4),
+        .instruction_out(fetch_instruction),
+
+        .instruction_address_misaligned(fetch_instruction_address_misaligned),
+        .instruction_address_out_of_range(fetch_instruction_address_out_of_range)
+    );
+
     rv32_if_id_reg if_id_register (
         .clk(clk),
         .resetn(resetn),
         .enable(if_id_enable),
         .flush(if_id_flush),
 
-        .valid_in(1'b1),
-        .pc_in(pc),
-        .pc_plus_4_in(fetch_pc_plus_4),
-        .instruction_in(instruction),
+        // PHASE 9 CHANGE: IF/ID now receives the response and PC aligned by the fetch controller.
+        .valid_in(fetch_instruction_valid),
+        .pc_in(fetch_instruction_pc),
+        .pc_plus_4_in(fetch_instruction_pc_plus_4),
+        .instruction_in(fetch_instruction),
 
         .valid_out(if_id_valid),
         .pc_out(if_id_pc),
@@ -288,6 +345,13 @@ module rv32_pipeline_core #(
 
         .pipeline_stalled(hazard_stall)
     );
+
+    // PHASE 9 CHANGE: issue a memory request whenever the core runs and no load-use stall holds fetch.
+    // This deliberately does not depend on fault_detected because fetch faults feed fault_detected below.
+    assign fetch_request_enable = resetn &&
+                                  core_enable &&
+                                  !core_fault &&
+                                  !pipeline_stalled;
 
     // A taken branch or jump discards the younger instructions,
     // so control transfer takes priority over a detected stall.
@@ -659,6 +723,9 @@ module rv32_pipeline_core #(
     // Ignore an illegal younger instruction when an older taken branch
     // is simultaneously flushing that wrong-path instruction.
     assign fault_detected =
+        // PHASE 9 CHANGE: an invalid actual fetch address now becomes a sticky core fault.
+        fetch_instruction_address_misaligned ||
+        fetch_instruction_address_out_of_range ||
         (if_id_valid &&
         decode_illegal_instruction &&
         !control_transfer_taken) ||

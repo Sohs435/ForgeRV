@@ -1,0 +1,551 @@
+ForgeRV Block RAM Safety Report
+================================
+Block design: rv32_fpga_block_design
+Generated: Fri Aug 07 18:32:49 +0530 2026
+
+ADDRESS MAP
+===========
+
+Segment: Reg
+  Offset: 
+  Range: 0x00001000
+
+Segment: Mem0
+  Offset: 
+  Range: 0x00001000
+
+Segment: SEG_core_control_status_Reg
+  Offset: 0x41200000
+  Range: 0x00001000
+
+Segment: SEG_instruction_bram_controller_Mem0
+  Offset: 0x40000000
+  Range: 0x00001000
+
+INSTRUCTION ADDRESS SLICE
+=========================
+instruction_address_slice / CONFIG.DIN_WIDTH = 12
+instruction_address_slice / CONFIG.DIN_FROM = 9
+instruction_address_slice / CONFIG.DIN_TO = 2
+instruction_address_slice / CONFIG.DOUT_WIDTH = 8
+
+BLOCK MEMORY GENERATOR
+======================
+instruction_memory / CONFIG.Memory_Type = True_Dual_Port_RAM
+instruction_memory / CONFIG.Write_Width_A = 32
+instruction_memory / CONFIG.Read_Width_A = 32
+instruction_memory / CONFIG.Write_Depth_A = 256
+instruction_memory / CONFIG.Read_Depth_A = <NOT PRESENT OR NOT SET>
+instruction_memory / CONFIG.Write_Width_B = 32
+instruction_memory / CONFIG.Read_Width_B = 32
+instruction_memory / CONFIG.Write_Depth_B = <NOT PRESENT OR NOT SET>
+instruction_memory / CONFIG.Read_Depth_B = <NOT PRESENT OR NOT SET>
+instruction_memory / CONFIG.Use_Byte_Write_Enable = true
+instruction_memory / CONFIG.Byte_Size = 8
+instruction_memory / CONFIG.Enable_A = Use_ENA_Pin
+instruction_memory / CONFIG.Enable_B = Use_ENB_Pin
+instruction_memory / CONFIG.Operating_Mode_A = WRITE_FIRST
+instruction_memory / CONFIG.Operating_Mode_B = WRITE_FIRST
+instruction_memory / CONFIG.Enable_32bit_Address = false
+instruction_memory / CONFIG.use_bram_block = Stand_Alone
+
+AXI BLOCK RAM CONTROLLER
+========================
+instruction_bram_controller / CONFIG.PROTOCOL = AXI4
+instruction_bram_controller / CONFIG.DATA_WIDTH = 32
+instruction_bram_controller / CONFIG.SINGLE_PORT_BRAM = 1
+instruction_bram_controller / CONFIG.ECC_TYPE = 0
+instruction_bram_controller / CONFIG.READ_LATENCY = 1
+
+AXI GPIO CONTROL AND STATUS
+===========================
+core_control_status / CONFIG.C_GPIO_WIDTH = 5
+core_control_status / CONFIG.C_GPIO2_WIDTH = 32
+core_control_status / CONFIG.C_IS_DUAL = 1
+core_control_status / CONFIG.C_ALL_OUTPUTS = 1
+core_control_status / CONFIG.C_ALL_INPUTS_2 = 0
+core_control_status / CONFIG.C_DOUT_DEFAULT = 0x00000000
+core_control_status / CONFIG.C_TRI_DEFAULT = 0xFFFFFFFF
+core_control_status / CONFIG.C_TRI_DEFAULT_2 = 0xFFFFFFFF
+
+PROCESSING SYSTEM FABRIC CLOCK
+==============================
+processing_system7_0 / CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ = 50
+processing_system7_0 / CONFIG.PCW_FCLK0_PERIPHERAL_FREQMHZ = <NOT PRESENT OR NOT SET>
+processing_system7_0 / CONFIG.PCW_EN_CLK0_PORT = 1
+processing_system7_0 / CONFIG.PCW_USE_M_AXI_GP0 = 1
+
+RESET CONNECTIONS
+=================
+
+Pin: proc_sys_reset_0/peripheral_aresetn
+  Direction: O
+  Left index: 0
+  Right index: 0
+  Net: proc_sys_reset_0_peripheral_aresetn
+    Pin endpoint: /proc_sys_reset_0/peripheral_aresetn
+    Pin endpoint: /core_control_status/s_axi_aresetn
+    Pin endpoint: /instruction_bram_controller/s_axi_aresetn
+    Pin endpoint: /core_reset_and/Op1
+
+Pin: proc_sys_reset_0/peripheral_reset
+  Direction: O
+  Left index: 0
+  Right index: 0
+  Connection: UNCONNECTED
+
+Pin: proc_sys_reset_0/interconnect_aresetn
+  Direction: O
+  Left index: 0
+  Right index: 0
+  Net: proc_sys_reset_0_interconnect_aresetn
+    Pin endpoint: /proc_sys_reset_0/interconnect_aresetn
+    Pin endpoint: /smartconnect_0/aresetn
+
+Pin: core_reset_and/Op1
+  Direction: I
+  Left index: 0
+  Right index: 0
+  Net: proc_sys_reset_0_peripheral_aresetn
+    Pin endpoint: /proc_sys_reset_0/peripheral_aresetn
+    Pin endpoint: /core_control_status/s_axi_aresetn
+    Pin endpoint: /instruction_bram_controller/s_axi_aresetn
+    Pin endpoint: /core_reset_and/Op1
+
+Pin: core_reset_and/Op2
+  Direction: I
+  Left index: 0
+  Right index: 0
+  Net: software_reset_slice_Dout
+    Pin endpoint: /software_reset_slice/Dout
+    Pin endpoint: /core_reset_and/Op2
+
+Pin: core_reset_and/Res
+  Direction: O
+  Left index: 0
+  Right index: 0
+  Net: core_reset_and_Res
+    Pin endpoint: /core_reset_and/Res
+    Pin endpoint: /rv32_fpga_wrapper_0/resetn
+
+Pin: software_reset_slice/Dout
+  Direction: O
+  Left index: 0
+  Right index: 0
+  Net: software_reset_slice_Dout
+    Pin endpoint: /software_reset_slice/Dout
+    Pin endpoint: /core_reset_and/Op2
+
+Pin: rv32_fpga_wrapper_0/resetn
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: core_reset_and_Res
+    Pin endpoint: /core_reset_and/Res
+    Pin endpoint: /rv32_fpga_wrapper_0/resetn
+
+Pin: instruction_bram_controller/s_axi_aresetn
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: proc_sys_reset_0_peripheral_aresetn
+    Pin endpoint: /proc_sys_reset_0/peripheral_aresetn
+    Pin endpoint: /core_control_status/s_axi_aresetn
+    Pin endpoint: /instruction_bram_controller/s_axi_aresetn
+    Pin endpoint: /core_reset_and/Op1
+
+Pin: core_control_status/s_axi_aresetn
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: proc_sys_reset_0_peripheral_aresetn
+    Pin endpoint: /proc_sys_reset_0/peripheral_aresetn
+    Pin endpoint: /core_control_status/s_axi_aresetn
+    Pin endpoint: /instruction_bram_controller/s_axi_aresetn
+    Pin endpoint: /core_reset_and/Op1
+
+Pin: smartconnect_0/aresetn
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: proc_sys_reset_0_interconnect_aresetn
+    Pin endpoint: /proc_sys_reset_0/interconnect_aresetn
+    Pin endpoint: /smartconnect_0/aresetn
+
+CLOCK CONNECTIONS
+=================
+
+Pin: processing_system7_0/FCLK_CLK0
+  Direction: O
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: processing_system7_0/M_AXI_GP0_ACLK
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: proc_sys_reset_0/slowest_sync_clk
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: smartconnect_0/aclk
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: instruction_bram_controller/s_axi_aclk
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: instruction_bram_controller/bram_clk_a
+  Direction: O
+  Left index: 
+  Right index: 
+  Net: instruction_bram_controller_bram_clk_a
+    Pin endpoint: /instruction_bram_controller/bram_clk_a
+    Pin endpoint: /instruction_memory/clka
+
+Pin: instruction_memory/clka
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: instruction_bram_controller_bram_clk_a
+    Pin endpoint: /instruction_bram_controller/bram_clk_a
+    Pin endpoint: /instruction_memory/clka
+
+Pin: instruction_memory/clkb
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: core_control_status/s_axi_aclk
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: rv32_fpga_wrapper_0/clk
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+BLOCK RAM PORT A CONNECTIONS
+============================
+
+Pin: instruction_bram_controller/bram_addr_a
+  Direction: O
+  Left index: 11
+  Right index: 0
+  Net: instruction_bram_controller_bram_addr_a
+    Pin endpoint: /instruction_bram_controller/bram_addr_a
+    Pin endpoint: /instruction_address_slice/Din
+
+Pin: instruction_bram_controller/bram_clk_a
+  Direction: O
+  Left index: 
+  Right index: 
+  Net: instruction_bram_controller_bram_clk_a
+    Pin endpoint: /instruction_bram_controller/bram_clk_a
+    Pin endpoint: /instruction_memory/clka
+
+Pin: instruction_bram_controller/bram_en_a
+  Direction: O
+  Left index: 
+  Right index: 
+  Net: instruction_bram_controller_bram_en_a
+    Pin endpoint: /instruction_bram_controller/bram_en_a
+    Pin endpoint: /instruction_memory/ena
+
+Pin: instruction_bram_controller/bram_we_a
+  Direction: O
+  Left index: 3
+  Right index: 0
+  Net: instruction_bram_controller_bram_we_a
+    Pin endpoint: /instruction_bram_controller/bram_we_a
+    Pin endpoint: /instruction_memory/wea
+
+Pin: instruction_bram_controller/bram_wrdata_a
+  Direction: O
+  Left index: 31
+  Right index: 0
+  Net: instruction_bram_controller_bram_wrdata_a
+    Pin endpoint: /instruction_bram_controller/bram_wrdata_a
+    Pin endpoint: /instruction_memory/dina
+
+Pin: instruction_bram_controller/bram_rddata_a
+  Direction: I
+  Left index: 31
+  Right index: 0
+  Net: instruction_memory_douta
+    Pin endpoint: /instruction_memory/douta
+    Pin endpoint: /instruction_bram_controller/bram_rddata_a
+
+Pin: instruction_bram_controller/bram_rst_a
+  Direction: O
+  Left index: 
+  Right index: 
+  Connection: UNCONNECTED
+
+Pin: instruction_address_slice/Din
+  Direction: I
+  Left index: 11
+  Right index: 0
+  Net: instruction_bram_controller_bram_addr_a
+    Pin endpoint: /instruction_bram_controller/bram_addr_a
+    Pin endpoint: /instruction_address_slice/Din
+
+Pin: instruction_address_slice/Dout
+  Direction: O
+  Left index: 7
+  Right index: 0
+  Net: instruction_address_slice_Dout
+    Pin endpoint: /instruction_address_slice/Dout
+    Pin endpoint: /instruction_memory/addra
+
+Pin: instruction_memory/addra
+  Direction: I
+  Left index: 7
+  Right index: 0
+  Net: instruction_address_slice_Dout
+    Pin endpoint: /instruction_address_slice/Dout
+    Pin endpoint: /instruction_memory/addra
+
+Pin: instruction_memory/clka
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: instruction_bram_controller_bram_clk_a
+    Pin endpoint: /instruction_bram_controller/bram_clk_a
+    Pin endpoint: /instruction_memory/clka
+
+Pin: instruction_memory/ena
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: instruction_bram_controller_bram_en_a
+    Pin endpoint: /instruction_bram_controller/bram_en_a
+    Pin endpoint: /instruction_memory/ena
+
+Pin: instruction_memory/wea
+  Direction: I
+  Left index: 3
+  Right index: 0
+  Net: instruction_bram_controller_bram_we_a
+    Pin endpoint: /instruction_bram_controller/bram_we_a
+    Pin endpoint: /instruction_memory/wea
+
+Pin: instruction_memory/dina
+  Direction: I
+  Left index: 31
+  Right index: 0
+  Net: instruction_bram_controller_bram_wrdata_a
+    Pin endpoint: /instruction_bram_controller/bram_wrdata_a
+    Pin endpoint: /instruction_memory/dina
+
+Pin: instruction_memory/douta
+  Direction: O
+  Left index: 31
+  Right index: 0
+  Net: instruction_memory_douta
+    Pin endpoint: /instruction_memory/douta
+    Pin endpoint: /instruction_bram_controller/bram_rddata_a
+
+BLOCK RAM PORT B CONNECTIONS
+============================
+
+Pin: rv32_fpga_wrapper_0/instruction_memory_address
+  Direction: O
+  Left index: 7
+  Right index: 0
+  Net: rv32_fpga_wrapper_0_instruction_memory_address
+    Pin endpoint: /rv32_fpga_wrapper_0/instruction_memory_address
+    Pin endpoint: /instruction_memory/addrb
+
+Pin: rv32_fpga_wrapper_0/instruction_memory_enable
+  Direction: O
+  Left index: 
+  Right index: 
+  Net: rv32_fpga_wrapper_0_instruction_memory_enable
+    Pin endpoint: /rv32_fpga_wrapper_0/instruction_memory_enable
+    Pin endpoint: /instruction_memory/enb
+
+Pin: rv32_fpga_wrapper_0/instruction_memory_read_data
+  Direction: I
+  Left index: 31
+  Right index: 0
+  Net: instruction_memory_doutb
+    Pin endpoint: /instruction_memory/doutb
+    Pin endpoint: /rv32_fpga_wrapper_0/instruction_memory_read_data
+
+Pin: instruction_memory/addrb
+  Direction: I
+  Left index: 7
+  Right index: 0
+  Net: rv32_fpga_wrapper_0_instruction_memory_address
+    Pin endpoint: /rv32_fpga_wrapper_0/instruction_memory_address
+    Pin endpoint: /instruction_memory/addrb
+
+Pin: instruction_memory/clkb
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: processing_system7_0_FCLK_CLK0
+    Pin endpoint: /processing_system7_0/FCLK_CLK0
+    Pin endpoint: /processing_system7_0/M_AXI_GP0_ACLK
+    Pin endpoint: /proc_sys_reset_0/slowest_sync_clk
+    Pin endpoint: /smartconnect_0/aclk
+    Pin endpoint: /instruction_bram_controller/s_axi_aclk
+    Pin endpoint: /core_control_status/s_axi_aclk
+    Pin endpoint: /rv32_fpga_wrapper_0/clk
+    Pin endpoint: /instruction_memory/clkb
+
+Pin: instruction_memory/enb
+  Direction: I
+  Left index: 
+  Right index: 
+  Net: rv32_fpga_wrapper_0_instruction_memory_enable
+    Pin endpoint: /rv32_fpga_wrapper_0/instruction_memory_enable
+    Pin endpoint: /instruction_memory/enb
+
+Pin: instruction_memory/web
+  Direction: I
+  Left index: 3
+  Right index: 0
+  Net: instruction_zero_write_enable_dout
+    Pin endpoint: /instruction_zero_write_enable/dout
+    Pin endpoint: /instruction_memory/web
+
+Pin: instruction_memory/dinb
+  Direction: I
+  Left index: 31
+  Right index: 0
+  Net: instruction_zero_data_dout
+    Pin endpoint: /instruction_zero_data/dout
+    Pin endpoint: /instruction_memory/dinb
+
+Pin: instruction_memory/doutb
+  Direction: O
+  Left index: 31
+  Right index: 0
+  Net: instruction_memory_doutb
+    Pin endpoint: /instruction_memory/doutb
+    Pin endpoint: /rv32_fpga_wrapper_0/instruction_memory_read_data
+
+AXI INTERFACE CONNECTIONS
+=========================
+
+Interface: processing_system7_0/M_AXI_GP0
+  Net: processing_system7_0_M_AXI_GP0
+    Interface endpoint: /processing_system7_0/M_AXI_GP0
+    Interface endpoint: /smartconnect_0/S00_AXI
+
+Interface: smartconnect_0/S00_AXI
+  Net: processing_system7_0_M_AXI_GP0
+    Interface endpoint: /processing_system7_0/M_AXI_GP0
+    Interface endpoint: /smartconnect_0/S00_AXI
+
+Interface: smartconnect_0/M00_AXI
+  Net: smartconnect_0_M00_AXI
+    Interface endpoint: /smartconnect_0/M00_AXI
+    Interface endpoint: /instruction_bram_controller/S_AXI
+
+Interface: smartconnect_0/M01_AXI
+  Net: smartconnect_0_M01_AXI
+    Interface endpoint: /smartconnect_0/M01_AXI
+    Interface endpoint: /core_control_status/S_AXI
+
+Interface: instruction_bram_controller/S_AXI
+  Net: smartconnect_0_M00_AXI
+    Interface endpoint: /smartconnect_0/M00_AXI
+    Interface endpoint: /instruction_bram_controller/S_AXI
+
+Interface: core_control_status/S_AXI
+  Net: smartconnect_0_M01_AXI
+    Interface endpoint: /smartconnect_0/M01_AXI
+    Interface endpoint: /core_control_status/S_AXI
+
+AUTOMATIC SAFETY CHECKS
+=======================
+PASS: Instruction slice input width = 12
+PASS: Instruction slice upper bit = 9
+PASS: Instruction slice lower bit = 2
+PASS: Instruction slice output width = 8
+PASS: Instruction memory type = True_Dual_Port_RAM
+PASS: Instruction memory depth = 256
+PASS: Instruction memory width = 32
+PASS: AXI BRAM controller data width = 32
+PASS: Vivado block-design validation completed
