@@ -2,19 +2,17 @@
 
 A custom RISC-V processor implemented in SystemVerilog for the PYNQ-Z2 FPGA.
 
-The final architecture and specialized use case are currently being defined.
-
-ForgeRV will be a custom 32-bit RISC-V processor and small SoC implemented from scratch
+ForgeRV is a custom 32-bit RISC-V processor and small SoC implemented from scratch
 on the PYNQ-Z2 development board in Verilog, SystemVerilog, Python and C. 
 
-The complete processor would ideally support:
+The complete processor supports:
 |Area|Planned Feature|
 |---|---|
 |ISA| RV32IMC|
 |Pipeline| Five-stage, single-issue, in-order |
-|Memory| BRAM/TCM initially, caches later on |
+|Memory| BRAM/TCM currently, caches later on |
 |Arithmetic| Harware Multiplication and Division |
-|System| CSRs, exceptions and interrupts | 
+|System| CSRs, exceptions and interrupts (eventual)| 
 |Control Flow| Branch Prediction and return-address stack | 
 |Hazards| Forwarding, stalls abd pipeline flushing |
 |System| CSRs, exceptions, timer and external interrupts |
