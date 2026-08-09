@@ -831,7 +831,9 @@ The final `+6.242 ns` value is therefore a timing pass with substantial setup ma
 
 ## 10. Troubleshooting runbook
 
-The safest way to diagnose this design is to stop at the first failing layer.
+If were being completely honest, this part is extremely tedious and sometimes requires 
+some trial and error. The safest way to diagnose this design is to stop at the first failing layer. 
+Some of my takeaways from this project are as follows. 
 
 ### 10.1 If FPGA programming hangs or Linux disappears
 
