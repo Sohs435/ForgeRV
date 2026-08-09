@@ -290,7 +290,9 @@ passed:
     addi x1, x0, 1
     sw x1, 64(x0)                    # status = 1
     sw x0, 68(x0)                    # failure code = 0
-    jal x0, finished
+
+finished:
+    jal x0, finished                 # remain inside instruction memory
 
 failed:
     addi x1, x0, -1
@@ -300,5 +302,5 @@ failed:
     sw x30, 76(x0)                   # expected result
     jal x0, failed
 
-finished:
-    jal x0, finished
+memory_guard:
+    jal x0, memory_guard

@@ -116,7 +116,7 @@ Disassembly of section .text:
  2b0:	23ee9a63          	bne	x29,x30,4e4 <failed>
  2b4:	08000093          	addi	x1,x0,128
  2b8:	12345f37          	lui	x30,0x12345
- 2bc:	678f0f13          	addi	x30,x30,1656 # 12345678 <finished+0x1234517c>
+ 2bc:	678f0f13          	addi	x30,x30,1656 # 12345678 <memory_guard+0x1234517c>
  2c0:	01e0a023          	sw	x30,0(x1)
  2c4:	0000ae83          	lw	x29,0(x1)
  2c8:	01600f93          	addi	x31,x0,22
@@ -131,7 +131,7 @@ Disassembly of section .text:
  2ec:	002081a3          	sb	x2,3(x1)
  2f0:	0000ae83          	lw	x29,0(x1)
  2f4:	44332f37          	lui	x30,0x44332
- 2f8:	211f0f13          	addi	x30,x30,529 # 44332211 <finished+0x44331d15>
+ 2f8:	211f0f13          	addi	x30,x30,529 # 44332211 <memory_guard+0x44331d15>
  2fc:	01700f93          	addi	x31,x0,23
  300:	1fee9263          	bne	x29,x30,4e4 <failed>
  304:	08000113          	addi	x2,x0,128
@@ -145,22 +145,22 @@ Disassembly of section .text:
  324:	01900f93          	addi	x31,x0,25
  328:	1bee9e63          	bne	x29,x30,4e4 <failed>
  32c:	00001137          	lui	x2,0x1
- 330:	12210113          	addi	x2,x2,290 # 1122 <finished+0xc26>
+ 330:	12210113          	addi	x2,x2,290 # 1122 <memory_guard+0xc26>
  334:	00209023          	sh	x2,0(x1)
  338:	000031b7          	lui	x3,0x3
- 33c:	34418193          	addi	x3,x3,836 # 3344 <finished+0x2e48>
+ 33c:	34418193          	addi	x3,x3,836 # 3344 <memory_guard+0x2e48>
  340:	00309123          	sh	x3,2(x1)
  344:	0000ae83          	lw	x29,0(x1)
  348:	33441f37          	lui	x30,0x33441
- 34c:	122f0f13          	addi	x30,x30,290 # 33441122 <finished+0x33440c26>
+ 34c:	122f0f13          	addi	x30,x30,290 # 33441122 <memory_guard+0x33440c26>
  350:	01a00f93          	addi	x31,x0,26
  354:	19ee9863          	bne	x29,x30,4e4 <failed>
  358:	00008137          	lui	x2,0x8
- 35c:	00110113          	addi	x2,x2,1 # 8001 <finished+0x7b05>
+ 35c:	00110113          	addi	x2,x2,1 # 8001 <memory_guard+0x7b05>
  360:	00209023          	sh	x2,0(x1)
  364:	00009e83          	lh	x29,0(x1)
  368:	ffff8f37          	lui	x30,0xffff8
- 36c:	001f0f13          	addi	x30,x30,1 # ffff8001 <finished+0xffff7b05>
+ 36c:	001f0f13          	addi	x30,x30,1 # ffff8001 <memory_guard+0xffff7b05>
  370:	01b00f93          	addi	x31,x0,27
  374:	17ee9863          	bne	x29,x30,4e4 <failed>
  378:	0000de83          	lhu	x29,0(x1)
@@ -279,7 +279,9 @@ Disassembly of section .text:
  4d4:	00100093          	addi	x1,x0,1
  4d8:	04102023          	sw	x1,64(x0) # 40 <_start-0xc0>
  4dc:	04002223          	sw	x0,68(x0) # 44 <_start-0xbc>
- 4e0:	01c0006f          	jal	x0,4fc <finished>
+
+000004e0 <finished>:
+ 4e0:	0000006f          	jal	x0,4e0 <finished>
 
 000004e4 <failed>:
  4e4:	fff00093          	addi	x1,x0,-1
@@ -289,5 +291,5 @@ Disassembly of section .text:
  4f4:	05e02623          	sw	x30,76(x0) # 4c <_start-0xb4>
  4f8:	fedff06f          	jal	x0,4e4 <failed>
 
-000004fc <finished>:
- 4fc:	0000006f          	jal	x0,4fc <finished>
+000004fc <memory_guard>:
+ 4fc:	0000006f          	jal	x0,4fc <memory_guard>
