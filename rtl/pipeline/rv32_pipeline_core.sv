@@ -93,6 +93,8 @@ module rv32_pipeline_core #(
     logic [31:0] id_ex_rs1_data;
     logic [31:0] id_ex_rs2_data;
     logic [31:0] id_ex_immediate;
+    
+
 
     alu_op_t id_ex_alu_operation;
     alu_a_sel_t id_ex_alu_a_select;
@@ -118,6 +120,9 @@ module rv32_pipeline_core #(
     logic [31:0] ex_alu_lhs;
     logic [31:0] ex_alu_rhs;
     logic [31:0] ex_alu_result;
+    logic [31:0] ex_pq_result;
+    logic [31:0] ex_execute_result;
+    logic ex_mem_valid_in;
     logic [31:0] ex_memory_address;
     logic ex_branch_taken;
     logic [31:0] ex_control_transfer_target;
@@ -163,6 +168,13 @@ module rv32_pipeline_core #(
     logic mem_wb_memory_access_misaligned;
 
     logic fault_detected;
+    
+    // The PQ instruction remains in ID/EX while its internal pipeline is busy.
+    logic pq_start;
+    logic pq_busy;
+    logic pq_stall;
+    logic pq_done;
+    logic load_use_stall;
     
     assign data_memory_write_commit = memory_write_enable;
     assign data_memory_write_address = ex_mem_memory_address;
@@ -323,6 +335,11 @@ module rv32_pipeline_core #(
                     decode_uses_rs1 = 1'b1;
                     decode_uses_rs2 = 1'b1;
                 end
+                
+                OPCODE_CUSTOM_0: begin 
+                    decode_uses_rs1 = 1'b1;
+                    decode_uses_rs2 = 1'b1; 
+                end 
 
                 default: begin
                     decode_uses_rs1 = 1'b0;
@@ -343,6 +360,9 @@ module rv32_pipeline_core #(
         .id_ex_memory_read_enable(id_ex_memory_read_enable),
         .id_ex_rd_address(id_ex_rd_address),
 
+        .pq_stall(pq_stall),
+
+        .load_use_stall(load_use_stall),
         .pipeline_stalled(hazard_stall)
     );
 
@@ -379,14 +399,15 @@ module rv32_pipeline_core #(
     // Taken branches and jumps remove the wrong-path IF instruction.
     assign if_id_flush = control_transfer_taken;
 
-    // A load-use stall inserts a bubble into EX.
-    // A control transfer also removes the wrong-path ID instruction.
-    assign id_ex_flush = pipeline_stalled ||
+    // A load-use stall inserts a bubble, but a PQ stall holds the PQ
+    // instruction in ID/EX until its multi-cycle calculation is complete.
+    assign id_ex_flush = load_use_stall ||
                          control_transfer_taken;
 
     assign id_ex_enable = resetn &&
                           core_enable &&
-                          !core_fault;
+                          !core_fault &&
+                          !pq_stall;
 
     assign ex_mem_enable = resetn &&
                            core_enable &&
@@ -526,6 +547,41 @@ module rv32_pipeline_core #(
 
         .result(ex_alu_result)
     );
+    
+    // start remains asserted while the PQ instruction is held in ID/EX.
+    // The PQ unit accepts it only once while its internal stages are empty.
+    assign pq_start = resetn &&
+                      core_enable &&
+                      !core_fault &&
+                      id_ex_valid &&
+                      (id_ex_alu_operation == ALU_PQ);
+
+    rv32_pq_unit pq_unit (
+        .clk(clk),
+        .resetn(resetn),
+        .start(pq_start),
+
+        .alpha_values(ex_forwarded_rs1),
+        .beta_values(ex_forwarded_rs2),
+
+        .busy(pq_busy),
+        .stall(pq_stall),
+        .done(pq_done),
+        .power_result(ex_pq_result)
+    );
+    
+    // Normal ALU instructions enter EX/MEM immediately. PQ creates EX/MEM
+    // bubbles until pq_done marks the pipelined result as valid.
+    always_comb begin
+        ex_execute_result = ex_alu_result;
+        ex_mem_valid_in = id_ex_valid;
+
+        if (id_ex_alu_operation == ALU_PQ) begin
+            ex_execute_result = ex_pq_result;
+            ex_mem_valid_in = id_ex_valid &&
+                              pq_done;
+        end
+    end
 
     // Branches must compare the forwarded values rather than stale
     // values originally captured from the register file.
@@ -573,15 +629,16 @@ module rv32_pipeline_core #(
     assign ex_instruction_address_misaligned =
         control_transfer_taken &&
         (ex_control_transfer_target[1:0] != 2'b00);
-
+    
+    
     rv32_ex_mem_reg ex_mem_register (
         .clk(clk),
         .resetn(resetn),
         .enable(ex_mem_enable),
         .flush(1'b0),
 
-        .valid_in(id_ex_valid),
-        .alu_result_in(ex_alu_result),
+        .valid_in(ex_mem_valid_in),
+        .alu_result_in(ex_execute_result),
         .memory_address_in(ex_memory_address),
         .store_data_in(ex_forwarded_rs2),
         .pc_plus_4_in(id_ex_pc_plus_4),
@@ -700,6 +757,7 @@ module rv32_pipeline_core #(
             mem_wb_memory_access_misaligned
         )
     );
+    
 
     always_comb begin
         case (mem_wb_writeback_select)

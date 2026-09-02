@@ -9,7 +9,10 @@ module rv32_hazard_unit (
     input logic id_ex_memory_read_enable, // ID/EX instruction is loading from memory
     input logic [4:0] id_ex_rd_address, // destination register of the older instruction
 
-    output logic pipeline_stalled // stall request sent to the pipeline top
+    input logic pq_stall, // PQ instruction is still occupying the Execute stage
+
+    output logic load_use_stall, // load-use hazard requires an ID/EX bubble
+    output logic pipeline_stalled // any condition that stalls the front of the pipeline
 );
 
     logic rs1_hazard; // younger instruction needs the older instruction's rd as rs1
@@ -38,11 +41,11 @@ module rv32_hazard_unit (
                           (id_ex_rd_address != 5'd0) &&
                           (rs1_hazard || rs2_hazard);
 
-        // The top module uses this signal to:
-        // 1. Hold the PC
-        // 2. Hold the IF/ID register
-        // 3. Flush ID/EX to insert one bubble
-        pipeline_stalled = load_use_hazard;
+        // Keep the load-use condition separate because it flushes ID/EX
+        load_use_stall = load_use_hazard;
+
+        // Both conditions hold the PC and IF/ID register
+        pipeline_stalled = load_use_hazard || pq_stall;
     end
 
 endmodule

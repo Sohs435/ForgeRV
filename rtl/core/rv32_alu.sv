@@ -20,6 +20,7 @@ module rv32_alu (
             ALU_OR:     result = lhs | rhs; //OR
             ALU_AND:    result = lhs & rhs; //AND
             ALU_COPY_B: result = rhs; //copy
+            ALU_PQ: result = 32'b0;
             default:    result = 32'b0;
         endcase
     end

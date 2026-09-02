@@ -11,7 +11,8 @@ package rv32_pkg;
         ALU_SRA    = 4'd7,
         ALU_OR     = 4'd8,
         ALU_AND    = 4'd9,
-        ALU_COPY_B = 4'd10
+        ALU_COPY_B = 4'd10,
+        ALU_PQ = 4'd11 //new ALU operand
     } alu_op_t;
 
     typedef enum logic [2:0] {
@@ -22,6 +23,8 @@ package rv32_pkg;
         IMM_U    = 3'd4,
         IMM_J    = 3'd5
     } imm_type_t;
+    
+
     
     localparam logic [6:0] OPCODE_LUI = 7'b0110111; // load upper immediate 20 bits into register and clear lower 12 bits 
     localparam logic [6:0] OPCODE_AUIPC = 7'b0010111; // PC + U-type immediate 
@@ -38,6 +41,13 @@ package rv32_pkg;
     
     //ECALL - System call instruction -> want to access something not directly accessible by user 
     //EBREAK - basically a debugger breakpoint, but implementation may differ 
+    
+    
+    // Custom ISA stuff 
+    localparam logic [6:0] OPCODE_CUSTOM_0 = 7'b0001011; // RISC-V Custom-0 opcode space
+
+    localparam logic [2:0] FUNCT3_PQ = 3'b000; // identifies the PQ instruction within Custom-0
+    localparam logic [6:0] FUNCT7_PQ = 7'b0000000;
 
     localparam logic [6:0] FUNCT7_NORMAL = 7'b0000000; // Normal operations (ADD, SRL, SLL , ...)
     localparam logic [6:0] FUNCT7_SUB_SRA = 7'b0100000; // SUB, SRA, SRI 
@@ -96,4 +106,5 @@ package rv32_pkg;
         FORWARD_EX_MEM = 2'd2
     } forward_sel_t;
     
+
 endpackage

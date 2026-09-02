@@ -377,7 +377,38 @@ module rv32_decoder (
                     illegal_instruction = 1'b0;
                 end
             end
-
+              
+            OPCODE_CUSTOM_0: begin 
+                case ({funct7, funct3})
+                    //first custom instruction decoding: opcode = OPCODE_CUSTOM_0, func7 = FUNCT7_PQ, func3 = FUNCT3_PQ
+                    {FUNCT7_PQ, FUNCT3_PQ}: begin 
+                        immediate_type = IMM_NONE; // R type instruction
+                        
+                        alu_operation = ALU_PQ; // pq r3, r2, r1 format so a and b will be registers whose values need to be read 
+                        alu_a_select = ALU_A_RS1;
+                        alu_b_select = ALU_B_RS2;
+                        
+                        writeback_select = WB_ALU; // PQ instruction produces its result in the execuation stage 
+                        
+                        //branch_operation = BRANCH_NONE;
+                        //jump_operation = JUMP_NONE;
+                        //memory_size = MEMORY_NONE;
+                        //special_operation = SPECIAL_NONE;
+                        
+                        register_write_enable = 1'b1; //need to write value of operation into register
+                        //memory_read_enable = 1'b0; // no load operation
+                        //memory_write_enable = 1'b0; //no store before
+                        //load_unsigned = 1'b0;
+                        
+                        illegal_instruction = 1'b0;
+                        
+                            
+                    end 
+                    default: begin 
+                        illegal_instruction = 1'b1;
+                    end 
+                endcase 
+            end 
             default: begin
                 
             end
